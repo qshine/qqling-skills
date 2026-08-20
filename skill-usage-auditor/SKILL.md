@@ -72,7 +72,7 @@ When requested, create exactly one local weekly automation, defaulting to Monday
 After changing parsing, storage, statistics, advice, or removal behavior, run:
 
 ```bash
-python3 -m unittest discover -s tests -v
+python3 -m unittest discover -s skill-usage-auditor -p 'test_*.py' -v
 python3 -m py_compile skill-usage-auditor/scripts/skill_usage_auditor.py
 ```
 
