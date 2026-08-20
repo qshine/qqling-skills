@@ -15,11 +15,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: python -m pip install -r xhs-cover-director/requirements.txt
       - name: Compile scripts
         run: |
           python -m py_compile skill-usage-auditor/scripts/skill_usage_auditor.py
           python -m py_compile skill-usage-auditor/scripts/validate_skill.py
+          python -m py_compile xhs-cover-director/scripts/compose_cover.py
       - name: Validate Skill structure
-        run: python skill-usage-auditor/scripts/validate_skill.py
+        run: |
+          python skill-usage-auditor/scripts/validate_skill.py
+          python skill-usage-auditor/scripts/validate_skill.py xhs-cover-director
       - name: Run unit tests
-        run: python -m unittest discover -s tests -v
+        run: |
+          python -m unittest discover -s tests -v
+          python -m unittest discover -s xhs-cover-director/tests -p 'test_*.py' -v
