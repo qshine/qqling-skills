@@ -1,0 +1,4 @@
+interface:
+  display_name: "小红书封面导演"
+  short_description: "生成或保真编辑准确、安全、有点击欲的小红书封面"
+  default_prompt: "Use $xhs-cover-director to turn this post and optional portrait into one publish-ready Xiaohongshu cover."
