@@ -8,9 +8,8 @@
 
 ## 安装
 
-在仓库根目录执行以下命令，并将 `<skill-name>` 替换为需要安装的 Skill 目录名：
+将 `<skill-name>` 替换为需要安装的 Skill 名称：
 
 ```bash
-mkdir -p ~/.agents/skills
-cp -R ./<skill-name> ~/.agents/skills/
+npx skills add qshine/qqling-skills --skill <skill-name>
 ```
