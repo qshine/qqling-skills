@@ -23,6 +23,10 @@ python -m py_compile skill-usage-auditor/scripts/*.py
 
 These commands run the full test suite, validate Skill structure, and catch Python syntax errors. Run all checks before opening a pull request.
 
+## Git Worktree Workflow
+
+If a task requires modifying code, automatically create and switch to a dedicated Git worktree before making any code changes. Do not edit code directly in the primary working tree. The worktree must use a new branch whose name starts with `codex-xxxx`, for example `codex-xxxx-fix-parser`.
+
 ## Coding Style & Naming Conventions
 
 Follow standard Python conventions: four-space indentation, `snake_case` functions and variables, `PascalCase` classes, and explicit imports. Keep type hints on public helpers and use `pathlib.Path` for filesystem work. Prefer deterministic logic and clear validation errors over implicit fallback behavior. Name tests `test_<behavior>` and skill directories in kebab-case. Keep `SKILL.md` frontmatter limited to `name` and `description`; `name` must match its directory.
