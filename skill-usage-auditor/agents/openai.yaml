@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Usage Auditor"
+  short_description: "Audit actual Skill loads and review low-use installs"
+  default_prompt: "Use $skill-usage-auditor to rank my actual Skill loads, show trends, and prepare a safe cleanup review."
