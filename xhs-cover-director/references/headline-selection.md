@@ -37,3 +37,10 @@ Reject any candidate scoring 0 on fidelity, regardless of total. Prefer the high
 - Preserve meaningful punctuation, Latin letters, numbers, and capitalization exactly.
 
 Avoid empty superlatives, unsupported certainty, fake urgency, and vague hooks such as “太绝了” or “一定要看.”
+
+## Emoji and platform phrasing
+
+- For a poster-series cover, choose one or two emoji that reinforce the topic or emotion. Render them as separate deterministic `emoji_stickers`; do not ask the image model to draw them or insert them into a CJK text line.
+- Use no more than one platform-native hook phrase, and only when the source supports it. “神器” can describe a genuinely useful tool; “避坑” requires a real mistake or risk; “保姆级” requires sufficiently complete instructions.
+- Do not use “亲测”, “封神”, “必看”, “100%”, guaranteed outcomes, or real-time trend claims without evidence.
+- Content-page emoji are optional. Prefer information density and hierarchy over decorating every page.

@@ -69,6 +69,74 @@ class ComposeCoverTests(unittest.TestCase):
             saved_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
             self.assertEqual(saved_manifest["blocks"][0]["lines"][1]["text"], "idea?")
             self.assertEqual(len(saved_manifest["sha256"]), 64)
+            self.assertEqual(saved_manifest["emoji_stickers"], [])
+
+    def test_renders_nine_by_sixteen_canvas(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            directory = Path(temp_dir)
+            title = {
+                "text": "One sharp idea?",
+                "box": [24, 80, 312, 160],
+                "lines": ["One sharp idea?"],
+                "max_font_size": 44,
+                "min_font_size": 20,
+            }
+            spec_path = self.write_spec(
+                directory,
+                canvas={"width": 360, "height": 640},
+                title=title,
+            )
+
+            manifest = compose_cover.render_cover(spec_path, directory / "poster.png")
+
+            self.assertEqual(manifest["canvas"]["aspect_ratio"], "9:16")
+            self.assertEqual(manifest["canvas"]["width"], 360)
+            self.assertEqual(manifest["canvas"]["height"], 640)
+
+    def test_renders_emoji_sticker_into_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            directory = Path(temp_dir)
+            spec_path = self.write_spec(
+                directory,
+                emoji_stickers=[
+                    {
+                        "text": "A",
+                        "position": [30, 220],
+                        "font": str(self.font_path),
+                        "font_size": 32,
+                        "rotation": -3,
+                    }
+                ],
+            )
+
+            manifest = compose_cover.render_cover(spec_path, directory / "cover.png")
+
+            self.assertEqual(manifest["emoji_stickers"][0]["text"], "A")
+            self.assertEqual(manifest["emoji_stickers"][0]["rotation"], -3.0)
+            self.assertEqual(manifest["emoji_stickers"][0]["font_size"], 32)
+
+    @unittest.skipUnless(
+        Path("/System/Library/Fonts/Apple Color Emoji.ttc").is_file(),
+        "Apple Color Emoji is not installed",
+    )
+    def test_renders_real_color_emoji_when_platform_font_is_available(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            directory = Path(temp_dir)
+            spec_path = self.write_spec(
+                directory,
+                emoji_stickers=[
+                    {
+                        "text": "🔥",
+                        "position": [30, 220],
+                        "font": "/System/Library/Fonts/Apple Color Emoji.ttc",
+                        "font_size": 64,
+                    }
+                ],
+            )
+
+            manifest = compose_cover.render_cover(spec_path, directory / "cover.png")
+
+            self.assertEqual(manifest["emoji_stickers"][0]["text"], "🔥")
 
     def test_rejects_existing_output_without_force(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -172,6 +240,70 @@ class ComposeCoverTests(unittest.TestCase):
             )
 
             with self.assertRaisesRegex(compose_cover.CompositionError, "extend its canvas"):
+                compose_cover.render_cover(spec_path, directory / "cover.png")
+
+    def test_rejects_background_that_does_not_match_nine_by_sixteen_canvas(self) -> None:
+        from PIL import Image
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            directory = Path(temp_dir)
+            background = directory / "three-by-four.png"
+            Image.new("RGB", (300, 400), "white").save(background)
+            spec_path = self.write_spec(
+                directory,
+                canvas={"width": 360, "height": 640},
+                background="three-by-four.png",
+                background_color=None,
+            )
+
+            with self.assertRaisesRegex(compose_cover.CompositionError, "does not match"):
+                compose_cover.render_cover(spec_path, directory / "poster.png")
+
+    def test_rejects_unsupported_canvas_ratio(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            directory = Path(temp_dir)
+            spec_path = self.write_spec(
+                directory,
+                canvas={"width": 400, "height": 600},
+            )
+
+            with self.assertRaisesRegex(compose_cover.CompositionError, "3:4 or 9:16"):
+                compose_cover.render_cover(spec_path, directory / "poster.png")
+
+    def test_rejects_emoji_outside_safe_area(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            directory = Path(temp_dir)
+            spec_path = self.write_spec(
+                directory,
+                emoji_stickers=[
+                    {
+                        "text": "A",
+                        "position": [0, 0],
+                        "font": str(self.font_path),
+                        "font_size": 32,
+                    }
+                ],
+            )
+
+            with self.assertRaisesRegex(compose_cover.CompositionError, "safe area"):
+                compose_cover.render_cover(spec_path, directory / "cover.png")
+
+    def test_rejects_missing_emoji_font(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            directory = Path(temp_dir)
+            spec_path = self.write_spec(
+                directory,
+                emoji_stickers=[
+                    {
+                        "text": "A",
+                        "position": [30, 220],
+                        "font": "missing-emoji.ttf",
+                        "font_size": 32,
+                    }
+                ],
+            )
+
+            with self.assertRaisesRegex(compose_cover.CompositionError, "emoji font does not exist"):
                 compose_cover.render_cover(spec_path, directory / "cover.png")
 
 
