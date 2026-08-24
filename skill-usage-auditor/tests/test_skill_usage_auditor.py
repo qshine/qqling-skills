@@ -12,7 +12,9 @@ import tempfile
 import unittest
 
 
-MODULE_PATH = Path(__file__).resolve().parent / "scripts" / "skill_usage_auditor.py"
+MODULE_PATH = (
+    Path(__file__).resolve().parents[1] / "scripts" / "skill_usage_auditor.py"
+)
 SPEC = importlib.util.spec_from_file_location("skill_usage_auditor", MODULE_PATH)
 assert SPEC and SPEC.loader
 auditor = importlib.util.module_from_spec(SPEC)
