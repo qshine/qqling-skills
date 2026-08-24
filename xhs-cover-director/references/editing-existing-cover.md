@@ -8,12 +8,12 @@ List the exact requested edit region and the invariants outside it. Change only 
 
 Do not regenerate the entire image to make a local edit. Prefer deterministic canvas operations, direct compositing, or a tightly masked edit. If the available tool cannot honor a pixel-level preservation requirement, state that limitation instead of pretending it can.
 
-## Adapt to 3:4 without destructive cropping
+## Adapt to the requested ratio without destructive cropping
 
-Inspect the source dimensions before editing.
+Inspect the source dimensions before editing. Use 3:4 for a standalone cover and 9:16 when the target is a page in a poster series.
 
-- If the source is narrower and taller than 3:4, extend the canvas to the left and right.
-- If the source is wider than 3:4, extend the canvas to the top and bottom.
+- If the source is narrower and taller than the target ratio, extend the canvas to the left and right.
+- If the source is wider than the target ratio, extend the canvas to the top and bottom.
 - Continue the existing background, texture, lighting, perspective, grain, and illustration style into the new area.
 - Do not crop, enlarge, move, or distort the subject merely to fill the canvas unless the user explicitly requests it.
 - Do not cut off titles, people, products, logos, signatures, or bottom credits.
@@ -30,7 +30,7 @@ When the user asks to remove a signature or other specific text, mask only that 
 
 Before export:
 
-- verify the output has an exact 3:4 ratio;
+- verify the output has the exact requested 3:4 or 9:16 ratio;
 - check the requested edit and nothing else;
 - compare all original readable text character by character;
 - inspect the top, bottom, and side safe areas for accidental clipping;

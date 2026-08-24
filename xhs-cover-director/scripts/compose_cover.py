@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compose exact text over a text-free Xiaohongshu cover base."""
+"""Compose exact text and emoji over a text-free Xiaohongshu poster base."""
 
 from __future__ import annotations
 
@@ -33,6 +33,16 @@ DEFAULT_CJK_FONTS = (
     "C:/Windows/Fonts/msyhbd.ttc",
     "C:/Windows/Fonts/msyh.ttc",
 )
+DEFAULT_EMOJI_FONTS = (
+    "/System/Library/Fonts/Apple Color Emoji.ttc",
+    "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf",
+    "/usr/share/fonts/opentype/noto/NotoColorEmoji.ttf",
+    "C:/Windows/Fonts/seguiemj.ttf",
+)
+SUPPORTED_ASPECT_RATIOS = {
+    (3, 4): "3:4",
+    (9, 16): "9:16",
+}
 
 
 def require_pillow() -> None:
@@ -186,6 +196,25 @@ def find_cjk_font(raw_path: Any, base_dir: Path) -> Path:
     raise CompositionError("no CJK font found; set the top-level font field to a CJK font file")
 
 
+def find_emoji_font(raw_path: Any, base_dir: Path) -> Path:
+    """Resolve an explicit emoji font or locate a conservative platform default."""
+
+    if raw_path is not None:
+        if not isinstance(raw_path, str) or not raw_path.strip():
+            raise CompositionError("emoji font must be a non-empty path string")
+        font_path = resolve_path(raw_path, base_dir)
+        if not font_path.is_file():
+            raise CompositionError(f"emoji font does not exist: {font_path}")
+        return font_path
+    for candidate in DEFAULT_EMOJI_FONTS:
+        font_path = Path(candidate)
+        if font_path.is_file():
+            return font_path.resolve()
+    raise CompositionError(
+        "no compatible emoji font found; set emoji_stickers[].font to an emoji font file"
+    )
+
+
 def normalize_lines(value: Any, field: str) -> list[dict[str, Any]]:
     """Normalize block lines while preserving every source character."""
 
@@ -251,6 +280,29 @@ def load_font(font_path: Path, size: int, font_index: int) -> Any:
         return ImageFont.truetype(str(font_path), size=size, index=font_index)
     except OSError as exc:
         raise CompositionError(f"cannot load font {font_path} at index {font_index}: {exc}") from exc
+
+
+def load_emoji_font(font_path: Path, requested_size: int, font_index: int) -> tuple[Any, int]:
+    """Load a scalable emoji font or the nearest common bitmap strike."""
+
+    fallback_sizes = (160, 128, 109, 96, 64, 48, 40, 32, 20, 16)
+    candidate_sizes = [requested_size]
+    candidate_sizes.extend(
+        sorted(
+            (size for size in fallback_sizes if size != requested_size),
+            key=lambda size: abs(size - requested_size),
+        )
+    )
+    last_error: Optional[OSError] = None
+    for size in candidate_sizes:
+        try:
+            return ImageFont.truetype(str(font_path), size=size, index=font_index), size
+        except OSError as exc:
+            last_error = exc
+    assert last_error is not None
+    raise CompositionError(
+        f"cannot load emoji font {font_path} near size {requested_size}: {last_error}"
+    ) from last_error
 
 
 def glyph_fingerprint(font: Any, character: str) -> tuple[tuple[int, int], bytes]:
@@ -503,16 +555,108 @@ def render_block(
     }
 
 
+def parse_position(value: Any, field: str) -> tuple[int, int]:
+    """Validate an [x, y] pixel position."""
+
+    if (
+        not isinstance(value, list)
+        or len(value) != 2
+        or any(isinstance(item, bool) or not isinstance(item, int) for item in value)
+    ):
+        raise CompositionError(f"{field} must be two integer values [x, y]")
+    x, y = value
+    if x < 0 or y < 0:
+        raise CompositionError(f"{field} must use non-negative coordinates")
+    return x, y
+
+
+def render_emoji_sticker(
+    canvas_image: Any,
+    config: Any,
+    canvas: tuple[int, int],
+    safe_box: tuple[int, int, int, int],
+    base_dir: Path,
+    field: str,
+) -> dict[str, Any]:
+    """Render one deterministic emoji sticker and record its exact placement."""
+
+    if not isinstance(config, dict):
+        raise CompositionError(f"{field} must be an object")
+    text = config.get("text")
+    if not isinstance(text, str) or not text.strip():
+        raise CompositionError(f"{field}.text must be a non-empty emoji string")
+    if any(character in text for character in ("\n", "\r", "\t")):
+        raise CompositionError(f"{field}.text cannot contain control whitespace")
+    if len(text) > 16:
+        raise CompositionError(f"{field}.text must contain one short emoji sequence")
+    x, y = parse_position(config.get("position"), f"{field}.position")
+    requested_size = positive_int(config.get("font_size"), f"{field}.font_size", 96)
+    font_index = non_negative_int(config.get("font_index"), f"{field}.font_index", 0)
+    font_path = find_emoji_font(config.get("font"), base_dir)
+    font, actual_size = load_emoji_font(font_path, requested_size, font_index)
+    missing_signature = glyph_fingerprint(font, "\U0010ffff")
+    if glyph_fingerprint(font, text) == missing_signature:
+        raise CompositionError(f"emoji font is missing the requested glyph sequence: {text}")
+    rotation = line_rotation(config, field)
+    fill = parse_color(config.get("fill", "#111111"), f"{field}.fill")
+    left, top, right, bottom = font.getbbox(text)
+    width = right - left
+    height = bottom - top
+    if width <= 0 or height <= 0:
+        raise CompositionError(f"{field}.text produced an empty glyph")
+    padding = max(4, math.ceil(actual_size * 0.08))
+    layer = Image.new("RGBA", (width + 2 * padding, height + 2 * padding), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(layer)
+    try:
+        draw.text(
+            (padding - left, padding - top),
+            text,
+            font=font,
+            fill=fill,
+            embedded_color=True,
+        )
+    except (OSError, ValueError) as exc:
+        raise CompositionError(f"cannot render emoji with font {font_path}: {exc}") from exc
+    if layer.getbbox() is None:
+        raise CompositionError(f"{field}.text produced an empty rendered layer")
+    if rotation:
+        layer = layer.rotate(rotation, resample=Image.Resampling.BICUBIC, expand=True)
+    sticker_box = (x, y, layer.width, layer.height)
+    parse_box(list(sticker_box), field, canvas)
+    ensure_inside_safe_area(sticker_box, safe_box, field)
+    canvas_image.alpha_composite(layer, (x, y))
+    return {
+        "name": field,
+        "text": text,
+        "position": [x, y],
+        "size": [layer.width, layer.height],
+        "rotation": rotation,
+        "font": str(font_path),
+        "font_index": font_index,
+        "font_size": actual_size,
+    }
+
+
+def aspect_ratio_label(width: int, height: int) -> str:
+    """Return a supported normalized ratio label for a canvas."""
+
+    divisor = math.gcd(width, height)
+    ratio = (width // divisor, height // divisor)
+    try:
+        return SUPPORTED_ASPECT_RATIOS[ratio]
+    except KeyError as exc:
+        raise CompositionError("canvas must use an exact 3:4 or 9:16 aspect ratio") from exc
+
+
 def create_canvas(spec: dict[str, Any], base_dir: Path) -> tuple[Any, tuple[int, int], Optional[Path]]:
-    """Create a 3:4 canvas from a background image or solid color."""
+    """Create a supported portrait canvas from a background image or solid color."""
 
     canvas_config = spec.get("canvas", {})
     if not isinstance(canvas_config, dict):
         raise CompositionError("canvas must be an object")
     width = positive_int(canvas_config.get("width"), "canvas.width", 1080)
     height = positive_int(canvas_config.get("height"), "canvas.height", 1440)
-    if width * 4 != height * 3:
-        raise CompositionError("canvas must use an exact 3:4 aspect ratio")
+    aspect_ratio_label(width, height)
     if width < 300 or height < 400 or width > 6000 or height > 8000:
         raise CompositionError("canvas dimensions must stay between 300x400 and 6000x8000")
     background_value = spec.get("background")
@@ -528,9 +672,10 @@ def create_canvas(spec: dict[str, Any], base_dir: Path) -> tuple[Any, tuple[int,
         try:
             with Image.open(background_path) as source:
                 source = ImageOps.exif_transpose(source).convert("RGBA")
-                if source.width * 4 != source.height * 3:
+                if source.width * height != source.height * width:
                     raise CompositionError(
-                        "background is not 3:4; extend its canvas without cropping before composition"
+                        "background aspect ratio does not match the canvas; "
+                        "extend its canvas without cropping before composition"
                     )
                 canvas_image = source.resize((width, height), resample=Image.Resampling.LANCZOS)
         except CompositionError:
@@ -611,11 +756,32 @@ def render_cover(
             )
         )
 
+    emoji_stickers = spec.get("emoji_stickers", [])
+    if not isinstance(emoji_stickers, list):
+        raise CompositionError("emoji_stickers must be a list")
+    if len(emoji_stickers) > 4:
+        raise CompositionError("emoji_stickers cannot contain more than 4 items")
+    rendered_emoji = [
+        render_emoji_sticker(
+            canvas_image,
+            sticker,
+            canvas,
+            safe_box,
+            base_dir,
+            f"emoji_stickers[{index}]",
+        )
+        for index, sticker in enumerate(emoji_stickers)
+    ]
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
     save_image(canvas_image, output_path)
     digest = hashlib.sha256(output_path.read_bytes()).hexdigest()
     manifest = {
-        "canvas": {"width": canvas[0], "height": canvas[1], "aspect_ratio": "3:4"},
+        "canvas": {
+            "width": canvas[0],
+            "height": canvas[1],
+            "aspect_ratio": aspect_ratio_label(*canvas),
+        },
         "safe_area": {
             "fractions": safe_fractions,
             "box": list(safe_box),
@@ -624,6 +790,7 @@ def render_cover(
         "format": output_path.suffix.lower().lstrip("."),
         "sha256": digest,
         "blocks": blocks,
+        "emoji_stickers": rendered_emoji,
     }
     if manifest_path:
         manifest_path.parent.mkdir(parents=True, exist_ok=True)

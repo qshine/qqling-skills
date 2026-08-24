@@ -36,6 +36,7 @@ class SkillStructureTests(unittest.TestCase):
         for relative_path in references:
             self.assertTrue((SKILL_DIR / relative_path).is_file(), relative_path)
         self.assertTrue((SKILL_DIR / "scripts" / "compose_cover.py").is_file())
+        self.assertTrue((SKILL_DIR / "scripts" / "compose_series.py").is_file())
 
     def test_openai_metadata_mentions_skill(self) -> None:
         metadata = (SKILL_DIR / "agents" / "openai.yaml").read_text(encoding="utf-8")
