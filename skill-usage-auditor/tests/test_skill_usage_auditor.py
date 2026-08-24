@@ -13,10 +13,7 @@ import unittest
 
 
 MODULE_PATH = (
-    Path(__file__).resolve().parents[1]
-    / "skill-usage-auditor"
-    / "scripts"
-    / "skill_usage_auditor.py"
+    Path(__file__).resolve().parents[1] / "scripts" / "skill_usage_auditor.py"
 )
 SPEC = importlib.util.spec_from_file_location("skill_usage_auditor", MODULE_PATH)
 assert SPEC and SPEC.loader
