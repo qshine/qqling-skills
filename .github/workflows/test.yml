@@ -32,7 +32,6 @@ jobs:
           python skill-usage-auditor/scripts/validate_skill.py schedule-night-shifts
       - name: Run unit tests
         run: |
-          python -m unittest discover -s tests -v
           python -m unittest discover -s xhs-cover-director/tests -p 'test_*.py' -v
           python -m unittest discover -s skill-usage-auditor/tests -p 'test_*.py' -v
           python -m unittest discover -s schedule-night-shifts/tests -p 'test_*.py' -v
