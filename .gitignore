@@ -1,2 +1,48 @@
+# Operating-system metadata
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# Python bytecode and tool caches
 __pycache__/
 *.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Local Python environments and package output
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+build/
+dist/
+
+# Local secrets and machine-specific settings
+.env
+.env.*
+!.env.example
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*~
+
+# Generated artifacts and local state
+output/
+tmp/
+*.xlsx
+*.xls
+*.log
+*.db
+*.sqlite
+*.sqlite3
