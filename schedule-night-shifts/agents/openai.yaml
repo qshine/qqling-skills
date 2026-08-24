@@ -1,0 +1,4 @@
+interface:
+  display_name: "科室夜班排班"
+  short_description: "自动生成公平、可审计的科室夜班 Excel 排班表"
+  default_prompt: "使用 $schedule-night-shifts 为指定人员和月份生成夜班排班表，并考虑请假与上月排班。"

@@ -15,11 +15,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install workbook dependency
+        run: python -m pip install openpyxl==3.1.5
       - name: Compile scripts
         run: |
           python -m py_compile skill-usage-auditor/scripts/skill_usage_auditor.py
           python -m py_compile skill-usage-auditor/scripts/validate_skill.py
+          python -m py_compile schedule-night-shifts/scripts/schedule_night_shifts.py
       - name: Validate Skill structure
-        run: python skill-usage-auditor/scripts/validate_skill.py
+        run: |
+          python skill-usage-auditor/scripts/validate_skill.py
+          python skill-usage-auditor/scripts/validate_skill.py schedule-night-shifts
       - name: Run unit tests
-        run: python -m unittest discover -s skill-usage-auditor -p 'test_*.py' -v
+        run: |
+          python -m unittest discover -s skill-usage-auditor/tests -p 'test_*.py' -v
+          python -m unittest discover -s schedule-night-shifts/tests -p 'test_*.py' -v

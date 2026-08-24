@@ -4,7 +4,7 @@ import sys
 import unittest
 
 
-SKILL_DIR = Path(__file__).resolve().parent
+SKILL_DIR = Path(__file__).resolve().parents[1]
 VALIDATOR = SKILL_DIR / "scripts" / "validate_skill.py"
 SPEC = importlib.util.spec_from_file_location("validate_skill", VALIDATOR)
 assert SPEC and SPEC.loader
