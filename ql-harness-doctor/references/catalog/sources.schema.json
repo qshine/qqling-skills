@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness-doctor.local/schemas/sources.schema.json",
+  "title": "Harness Doctor Source Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "registry_version", "source_snapshots"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "registry_version": { "type": "string" },
+    "source_snapshots": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/source_snapshot" }
+    }
+  },
+  "$defs": {
+    "revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": { "type": "string" },
+        "value": { "type": "string" }
+      }
+    },
+    "source_document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "page_url", "source_path"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "page_url": { "type": "string" },
+        "source_path": { "type": "string" }
+      }
+    },
+    "source_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "publisher",
+        "canonical_url",
+        "revision",
+        "accessed_on",
+        "language",
+        "documents"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "publisher": { "type": "string" },
+        "canonical_url": { "type": "string" },
+        "revision": { "$ref": "#/$defs/revision" },
+        "accessed_on": { "type": "string" },
+        "language": { "type": "string" },
+        "documents": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/source_document" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+interface:
+  display_name: "ql-harness-doctor"
+  short_description: "手动调用诊断单仓库 Agent 规范缺口，按选择预览并安全补齐 Harness"
+  default_prompt: "使用 $ql-harness-doctor 诊断当前仓库的 Harness 规范覆盖率，先给分组建议，等我选择后统一预览文件改动，最终确认一次再执行。"
+
+policy:
+  allow_implicit_invocation: false

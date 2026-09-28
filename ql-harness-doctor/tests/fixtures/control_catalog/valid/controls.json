@@ -1,0 +1,331 @@
+{
+  "schema_version": "1.1.0",
+  "catalog_version": "0.1.0",
+  "domains": [
+    {
+      "id": "HD-FND",
+      "title": "基础 Harness",
+      "description": "最小有效测试域",
+      "display_order": 1
+    }
+  ],
+  "diagnostic_statuses": [
+    {
+      "id": "satisfied",
+      "label": "已满足",
+      "definition": "证据完整且一致"
+    },
+    {
+      "id": "partial",
+      "label": "部分满足",
+      "definition": "存在有效基础但仍有缺口"
+    },
+    {
+      "id": "missing",
+      "label": "缺失",
+      "definition": "适用但没有证据"
+    },
+    {
+      "id": "conflict",
+      "label": "冲突",
+      "definition": "权威候选给出不兼容结论"
+    },
+    {
+      "id": "unverifiable",
+      "label": "无法验证",
+      "definition": "当前证据不足以确认"
+    },
+    {
+      "id": "not_applicable",
+      "label": "不适用",
+      "definition": "根据场景明确排除"
+    }
+  ],
+  "coverage_policy": {
+    "numerator_statuses": [
+      "satisfied"
+    ],
+    "excluded_from_denominator": [
+      "not_applicable"
+    ],
+    "zero_denominator_result": "N/A",
+    "is_weighted": false
+  },
+  "maturity_levels": [
+    {
+      "id": "L0",
+      "title": "未准备",
+      "description": "未满足 L1",
+      "requires_lower_levels": false,
+      "activation": "default",
+      "gate_control_ids": []
+    },
+    {
+      "id": "L1",
+      "title": "可发现、可启动",
+      "description": "基础入口可用",
+      "requires_lower_levels": true,
+      "activation": "default",
+      "gate_control_ids": [
+        "HD-FND-001"
+      ]
+    },
+    {
+      "id": "L2",
+      "title": "有边界、可接续",
+      "description": "任务状态可恢复",
+      "requires_lower_levels": true,
+      "activation": "default",
+      "gate_control_ids": [
+        "HD-FND-002"
+      ]
+    },
+    {
+      "id": "L3",
+      "title": "可验证、可维护",
+      "description": "完成由证据门控",
+      "requires_lower_levels": true,
+      "activation": "default",
+      "gate_control_ids": [
+        "HD-FND-003"
+      ]
+    },
+    {
+      "id": "L4",
+      "title": "可自治、可协调",
+      "description": "高级能力显式启用",
+      "requires_lower_levels": true,
+      "activation": "explicit_autonomy",
+      "gate_control_ids": [
+        "HD-FND-004"
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "id": "HD-FND-001",
+      "title": "基础控制一",
+      "domain": "HD-FND",
+      "maturity": "L1",
+      "is_gate": true,
+      "requirement": "提供最小基础证据。",
+      "applicability": {
+        "applies_when": [
+          "所有测试仓库"
+        ],
+        "not_applicable_when": []
+      },
+      "evidence": {
+        "positive": [
+          "存在基础入口"
+        ],
+        "partial": [
+          "入口不完整"
+        ],
+        "conflict": [
+          "入口相互冲突"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "补充基础入口。",
+        "artifact_types": [
+          "agent_instruction"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "fixture-source@v1",
+          "document_id": "fixture-L01",
+          "locator": "",
+          "note": "测试来源"
+        }
+      ],
+      "source_aliases": [
+        "L01-C01"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.1.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-FND-002",
+      "title": "基础控制二",
+      "domain": "HD-FND",
+      "maturity": "L2",
+      "is_gate": true,
+      "requirement": "提供最小状态证据。",
+      "applicability": {
+        "applies_when": [
+          "所有测试仓库"
+        ],
+        "not_applicable_when": []
+      },
+      "evidence": {
+        "positive": [
+          "存在状态入口"
+        ],
+        "partial": [
+          "状态不完整"
+        ],
+        "conflict": [
+          "状态相互冲突"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "补充状态入口。",
+        "artifact_types": [
+          "progress_record"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-FND-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "fixture-source@v1",
+          "document_id": "fixture-L01",
+          "locator": "",
+          "note": "测试来源"
+        }
+      ],
+      "source_aliases": [
+        "L01-C02"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.1.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-FND-003",
+      "title": "基础控制三",
+      "domain": "HD-FND",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "提供最小验证证据。",
+      "applicability": {
+        "applies_when": [
+          "所有测试仓库"
+        ],
+        "not_applicable_when": []
+      },
+      "evidence": {
+        "positive": [
+          "存在验证入口"
+        ],
+        "partial": [
+          "验证不完整"
+        ],
+        "conflict": [
+          "验证相互冲突"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "补充验证入口。",
+        "artifact_types": [
+          "verification_rule"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-FND-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "fixture-source@v1",
+          "document_id": "fixture-L01",
+          "locator": "",
+          "note": "测试来源"
+        }
+      ],
+      "source_aliases": [
+        "L01-C03"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.1.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-FND-004",
+      "title": "基础控制四",
+      "domain": "HD-FND",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "提供最小自治证据。",
+      "applicability": {
+        "applies_when": [
+          "显式启用自治"
+        ],
+        "not_applicable_when": [
+          "未启用自治"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "存在自治边界"
+        ],
+        "partial": [
+          "自治边界不完整"
+        ],
+        "conflict": [
+          "自治规则相互冲突"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "补充自治边界。",
+        "artifact_types": [
+          "automation_policy"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-FND-003"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "fixture-source@v1",
+          "document_id": "fixture-L01",
+          "locator": "",
+          "note": "测试来源"
+        }
+      ],
+      "source_aliases": [
+        "L01-C04"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.1.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    }
+  ],
+  "excluded_candidates": []
+}

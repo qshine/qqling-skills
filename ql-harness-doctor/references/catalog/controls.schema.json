@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness-doctor.local/schemas/controls.schema.json",
+  "title": "Harness Doctor Control Catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "catalog_version",
+    "domains",
+    "diagnostic_statuses",
+    "coverage_policy",
+    "maturity_levels",
+    "controls",
+    "excluded_candidates"
+  ],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "catalog_version": { "type": "string" },
+    "domains": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/domain" }
+    },
+    "diagnostic_statuses": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/diagnostic_status" }
+    },
+    "coverage_policy": { "$ref": "#/$defs/coverage_policy" },
+    "maturity_levels": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/maturity_level" }
+    },
+    "controls": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/control" }
+    },
+    "excluded_candidates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/excluded_candidate" }
+    }
+  },
+  "$defs": {
+    "string_array": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "description", "display_order"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "display_order": { "type": "integer" }
+      }
+    },
+    "diagnostic_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "definition"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "definition": { "type": "string" }
+      }
+    },
+    "coverage_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "numerator_statuses",
+        "excluded_from_denominator",
+        "zero_denominator_result",
+        "is_weighted"
+      ],
+      "properties": {
+        "numerator_statuses": { "$ref": "#/$defs/string_array" },
+        "excluded_from_denominator": { "$ref": "#/$defs/string_array" },
+        "zero_denominator_result": { "type": "string" },
+        "is_weighted": { "type": "boolean" }
+      }
+    },
+    "maturity_level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "description",
+        "requires_lower_levels",
+        "activation",
+        "gate_control_ids"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "requires_lower_levels": { "type": "boolean" },
+        "activation": { "type": "string" },
+        "gate_control_ids": { "$ref": "#/$defs/string_array" }
+      }
+    },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["applies_when", "not_applicable_when"],
+      "properties": {
+        "applies_when": { "$ref": "#/$defs/string_array" },
+        "not_applicable_when": { "$ref": "#/$defs/string_array" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["positive", "partial", "conflict", "minimum_level"],
+      "properties": {
+        "positive": { "$ref": "#/$defs/string_array" },
+        "partial": { "$ref": "#/$defs/string_array" },
+        "conflict": { "$ref": "#/$defs/string_array" },
+        "minimum_level": { "type": "string", "enum": ["declared", "recorded", "verified"] }
+      }
+    },
+    "remediation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "artifact_types", "risk"],
+      "properties": {
+        "summary": { "type": "string" },
+        "artifact_types": { "$ref": "#/$defs/string_array" },
+        "risk": { "type": "string" }
+      }
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "document_id", "locator", "note"],
+      "properties": {
+        "source_id": { "type": "string" },
+        "document_id": { "type": "string" },
+        "locator": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "introduced_in",
+        "changed_in",
+        "deprecated_in",
+        "superseded_by"
+      ],
+      "properties": {
+        "status": { "type": "string" },
+        "introduced_in": { "type": "string" },
+        "changed_in": { "type": "string" },
+        "deprecated_in": { "type": ["string", "null"] },
+        "superseded_by": { "type": ["string", "null"] }
+      }
+    },
+    "control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "domain",
+        "maturity",
+        "is_gate",
+        "requirement",
+        "applicability",
+        "evidence",
+        "remediation",
+        "dependencies",
+        "conflicts_with",
+        "alternatives",
+        "source_refs",
+        "source_aliases",
+        "lifecycle"
+      ],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "domain": { "type": "string" },
+        "maturity": { "type": "string" },
+        "is_gate": { "type": "boolean" },
+        "requirement": { "type": "string" },
+        "applicability": { "$ref": "#/$defs/applicability" },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "remediation": { "$ref": "#/$defs/remediation" },
+        "dependencies": { "$ref": "#/$defs/string_array" },
+        "conflicts_with": { "$ref": "#/$defs/string_array" },
+        "alternatives": { "$ref": "#/$defs/string_array" },
+        "source_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/source_ref" }
+        },
+        "source_aliases": { "$ref": "#/$defs/string_array" },
+        "lifecycle": { "$ref": "#/$defs/lifecycle" }
+      }
+    },
+    "excluded_candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "rationale", "decision"],
+      "properties": {
+        "id": { "type": "string" },
+        "rationale": { "type": "string" },
+        "decision": { "type": "string" }
+      }
+    }
+  }
+}

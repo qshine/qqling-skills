@@ -1,0 +1,3079 @@
+{
+  "schema_version": "1.1.0",
+  "catalog_version": "0.4.0",
+  "domains": [
+    {
+      "id": "HD-FND",
+      "title": "基础 Harness",
+      "description": "指令、工具、环境、状态和反馈五类执行条件。",
+      "display_order": 1
+    },
+    {
+      "id": "HD-KNW",
+      "title": "仓库知识",
+      "description": "Agent 可发现、可信且靠近作用域的仓库知识。",
+      "display_order": 2
+    },
+    {
+      "id": "HD-INS",
+      "title": "指令系统",
+      "description": "精炼入口、优先级、适用条件和规则生命周期。",
+      "display_order": 3
+    },
+    {
+      "id": "HD-BST",
+      "title": "初始化与启动",
+      "description": "统一且经过验证的安装、启动和检查入口。",
+      "display_order": 4
+    },
+    {
+      "id": "HD-SCP",
+      "title": "任务边界",
+      "description": "范围、非目标、工作上限和行为级完成条件。",
+      "display_order": 5
+    },
+    {
+      "id": "HD-STA",
+      "title": "状态与连续性",
+      "description": "可持久恢复的进度、决策、验证和下一步。",
+      "display_order": 6
+    },
+    {
+      "id": "HD-VER",
+      "title": "验证与终止",
+      "description": "可执行反馈、分层完成门槛和终止证据。",
+      "display_order": 7
+    },
+    {
+      "id": "HD-ARC",
+      "title": "架构约束",
+      "description": "可发现并可验证的关键架构不变量。",
+      "display_order": 8
+    },
+    {
+      "id": "HD-OBS",
+      "title": "可观测与评估",
+      "description": "支持诊断和复现判断的运行与过程信号。",
+      "display_order": 9
+    },
+    {
+      "id": "HD-HYG",
+      "title": "清洁与维护",
+      "description": "可交接退出、安全清理和长期质量维护。",
+      "display_order": 10
+    },
+    {
+      "id": "HD-AUT",
+      "title": "自动循环",
+      "description": "有界、可恢复且权限受控的自动执行循环。",
+      "display_order": 11
+    },
+    {
+      "id": "HD-GRF",
+      "title": "图编排",
+      "description": "显式多节点路由、共享状态、恢复和审阅容量。",
+      "display_order": 12
+    }
+  ],
+  "diagnostic_statuses": [
+    {
+      "id": "satisfied",
+      "label": "已满足",
+      "definition": "证据完整、一致，满足控制要求。"
+    },
+    {
+      "id": "partial",
+      "label": "部分满足",
+      "definition": "存在有效基础，但仍缺少必需字段、范围、执行链或维护机制。"
+    },
+    {
+      "id": "missing",
+      "label": "缺失",
+      "definition": "控制适用，但在允许读取的仓库范围内找不到相关证据。"
+    },
+    {
+      "id": "conflict",
+      "label": "冲突",
+      "definition": "两个或以上权威候选对同一事实给出不兼容结论。"
+    },
+    {
+      "id": "unverifiable",
+      "label": "无法验证",
+      "definition": "存在声明或外部引用，但当前只读证据不足以确认。"
+    },
+    {
+      "id": "not_applicable",
+      "label": "不适用",
+      "definition": "根据仓库类型和使用场景明确排除，并记录具体理由。"
+    }
+  ],
+  "coverage_policy": {
+    "numerator_statuses": [
+      "satisfied"
+    ],
+    "excluded_from_denominator": [
+      "not_applicable"
+    ],
+    "zero_denominator_result": "N/A",
+    "is_weighted": false
+  },
+  "maturity_levels": [
+    {
+      "id": "L0",
+      "title": "未准备",
+      "description": "未满足 L1，Agent 仍需猜测仓库目的、启动方式或基本验证。",
+      "requires_lower_levels": false,
+      "activation": "default",
+      "gate_control_ids": []
+    },
+    {
+      "id": "L1",
+      "title": "可发现、可启动",
+      "description": "入口、关键事实和适用的安装、启动、基本验证命令可发现且一致。",
+      "requires_lower_levels": true,
+      "activation": "default",
+      "gate_control_ids": [
+        "HD-BST-001",
+        "HD-FND-001",
+        "HD-INS-001",
+        "HD-KNW-001"
+      ]
+    },
+    {
+      "id": "L2",
+      "title": "有边界、可接续",
+      "description": "任务边界明确，状态、关键决策、验证和下一步可持久恢复。",
+      "requires_lower_levels": true,
+      "activation": "default",
+      "gate_control_ids": [
+        "HD-BST-002",
+        "HD-BST-003",
+        "HD-INS-002",
+        "HD-KNW-002",
+        "HD-SCP-001",
+        "HD-SCP-002",
+        "HD-SCP-003",
+        "HD-STA-001",
+        "HD-STA-002",
+        "HD-STA-003",
+        "HD-VER-001"
+      ]
+    },
+    {
+      "id": "L3",
+      "title": "可验证、可维护",
+      "description": "完成由相称证据门控，运行可诊断，退出清洁且维护安全。",
+      "requires_lower_levels": true,
+      "activation": "default",
+      "gate_control_ids": [
+        "HD-ARC-001",
+        "HD-FND-003",
+        "HD-HYG-001",
+        "HD-HYG-002",
+        "HD-KNW-003",
+        "HD-OBS-001",
+        "HD-OBS-002",
+        "HD-OBS-003",
+        "HD-STA-004",
+        "HD-STA-005",
+        "HD-VER-002",
+        "HD-VER-003",
+        "HD-VER-004",
+        "HD-VER-005"
+      ]
+    },
+    {
+      "id": "L4",
+      "title": "可自治、可协调",
+      "description": "仅在显式启用且至少一个自治或图场景适用时评定；执行必须有界、可恢复并可审阅。",
+      "requires_lower_levels": true,
+      "activation": "explicit_autonomy",
+      "gate_control_ids": [
+        "HD-AUT-001",
+        "HD-AUT-002",
+        "HD-AUT-003",
+        "HD-AUT-004",
+        "HD-AUT-005",
+        "HD-AUT-006",
+        "HD-GRF-001",
+        "HD-GRF-002",
+        "HD-GRF-003",
+        "HD-GRF-004",
+        "HD-GRF-005",
+        "HD-GRF-006",
+        "HD-GRF-007",
+        "HD-HYG-003",
+        "HD-STA-006"
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "id": "HD-ARC-001",
+      "title": "关键架构不变量进入可执行检查",
+      "domain": "HD-ARC",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "明确的分层、依赖、安全或数据边界应有可发现的权威说明；适合机械判断的不变量应进入自动检查并与文档保持一致。",
+      "applicability": {
+        "applies_when": [
+          "仓库存在跨模块依赖、分层、安全边界或其他关键架构约束"
+        ],
+        "not_applicable_when": [
+          "单一小模块没有可识别的跨边界架构不变量"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "架构文档、依赖规则、自定义 lint 或架构测试对同一不变量给出一致结论"
+        ],
+        "partial": [
+          "关键约束只有文档描述，或自动规则只覆盖部分边界"
+        ],
+        "conflict": [
+          "文档允许的依赖被自动规则禁止，或代码已绕过声明的架构边界"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "选择高价值且可机械判断的不变量，补充最小自动检查和对应说明。",
+        "artifact_types": [
+          "architecture_rule",
+          "architecture_test"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-BST-002",
+        "HD-KNW-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L10",
+          "locator": "",
+          "note": "关键架构不变量应在适合时提升为自动检查。"
+        }
+      ],
+      "source_aliases": [
+        "L10-C03"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-ARC-002",
+      "title": "重复审查反馈可提升为规则",
+      "domain": "HD-ARC",
+      "maturity": "L3",
+      "is_gate": false,
+      "requirement": "持续重复且适合机械判断的审查反馈应有归类、决策和提升为文档规则或回归检查的机制。",
+      "applicability": {
+        "applies_when": [
+          "仓库有持续评审活动并出现重复反馈模式"
+        ],
+        "not_applicable_when": [
+          "没有可追溯的重复评审反馈，或反馈依赖无法机械化的情境判断"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "评审指南、规则变更记录或回归测试能追溯到重复反馈"
+        ],
+        "partial": [
+          "团队知道重复问题，但没有归类、提升或复验路径"
+        ],
+        "conflict": [
+          "新增规则与现有架构约束或评审标准给出相反要求"
+        ],
+        "minimum_level": "recorded"
+      },
+      "remediation": {
+        "summary": "记录重复反馈的模式和适用边界，经确认后提升为最小规则或回归测试。",
+        "artifact_types": [
+          "regression_rule",
+          "review_policy"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L10",
+          "locator": "",
+          "note": "重复审查反馈应有提升为规则的机制。"
+        }
+      ],
+      "source_aliases": [
+        "L10-C04"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-AUT-001",
+      "title": "自主循环具有目标、验证和有界停止",
+      "domain": "HD-AUT",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "自主循环必须明确可验证目标、执行反馈、停止条件，并限制轮次、时间、成本和无进展重试；达到边界后转入人工升级而非继续循环。",
+      "applicability": {
+        "applies_when": [
+          "仓库存在 goal、loop、持续重试或无人值守 Agent 自动化"
+        ],
+        "not_applicable_when": [
+          "仓库没有无人值守或多轮自动开发需求"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "循环契约同时定义目标、验证器、成功停止、失败出口、预算和人工升级"
+        ],
+        "partial": [
+          "循环能运行但缺少预算、无进展检测、失败出口或人工升级"
+        ],
+        "conflict": [
+          "目标、验证器和停止条件对完成状态给出不兼容定义"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "仅提供循环契约和边界设计建议，不创建或启动自动循环。",
+        "artifact_types": [
+          "automation_policy",
+          "loop_contract"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-SCP-002",
+        "HD-VER-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L13",
+          "locator": "",
+          "note": "自主循环需要目标、验证、停止以及轮次、预算和升级边界。"
+        }
+      ],
+      "source_aliases": [
+        "L13-C01",
+        "L13-C02"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-AUT-002",
+      "title": "循环状态跨轮次持久化且可恢复",
+      "domain": "HD-AUT",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "多轮或跨会话循环应把目标、当前轮次、尝试记录、验证结果、预算消耗和下一动作持久化，并提供从检查点恢复的步骤。",
+      "applicability": {
+        "applies_when": [
+          "自主循环跨多个轮次、会话或进程运行"
+        ],
+        "not_applicable_when": [
+          "没有自主循环，或一次性确定性任务不发生跨轮次恢复"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "版本化状态 schema、检查点和恢复说明覆盖目标、尝试、证据与预算"
+        ],
+        "partial": [
+          "保存了部分状态，但重启后仍需依赖聊天历史或人工猜测"
+        ],
+        "conflict": [
+          "多个状态源对轮次、预算、完成或下一动作给出不同结论"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "仅提供最小循环状态 schema 和恢复流程设计，不实现运行时状态机。",
+        "artifact_types": [
+          "loop_state_schema",
+          "recovery_guide"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-AUT-001",
+        "HD-STA-003"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L13",
+          "locator": "",
+          "note": "循环状态需要跨轮次持久化并可恢复。"
+        }
+      ],
+      "source_aliases": [
+        "L13-C03"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-AUT-003",
+      "title": "高风险执行使用独立 Maker 与 Checker",
+      "domain": "HD-AUT",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "高风险、跨组件、主观验收或长时自主任务应由独立角色或新鲜上下文复核，Checker 的结论必须基于证据且不能由 Maker 自行覆盖。",
+      "applicability": {
+        "applies_when": [
+          "自动化会写代码、修改外部系统、自主运行较久或处理高风险变更"
+        ],
+        "not_applicable_when": [
+          "没有自主循环，或低风险局部任务已使用显式自检且无需独立角色"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "Maker 与 Checker 使用独立会话或角色，复核输入、证据和否决权明确"
+        ],
+        "partial": [
+          "存在复核步骤，但共享未经限制的上下文或没有独立否决权"
+        ],
+        "conflict": [
+          "Maker 可绕过 Checker，或两个角色使用不同通过标准"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "仅提供独立复核角色、触发条件和证据接口设计，不创建子 Agent。",
+        "artifact_types": [
+          "checker_contract",
+          "review_policy"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-AUT-001",
+        "HD-VER-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L09",
+          "locator": "",
+          "note": "高风险任务应由独立角色或新鲜上下文复核。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L13",
+          "locator": "",
+          "note": "高风险循环应分离 Maker 与 Checker 上下文。"
+        }
+      ],
+      "source_aliases": [
+        "L09-C04",
+        "L13-C04"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-AUT-004",
+      "title": "并行执行隔离工作区、状态和所有权",
+      "domain": "HD-AUT",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "多个 Agent 并行时必须隔离工作区和任务状态，显式分配文件或能力所有权，并在集成门中处理冲突与验证，不能共享无边界工作树。",
+      "applicability": {
+        "applies_when": [
+          "仓库同时运行多个 Agent、循环或并行团队工作流"
+        ],
+        "not_applicable_when": [
+          "只有一个 active 执行者并遵循默认 WIP 为一"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "worktree 或等价隔离、所有权映射、独立状态和集成验证门同时存在"
+        ],
+        "partial": [
+          "只有分支或工作区隔离，但没有所有权、状态隔离或集成责任"
+        ],
+        "conflict": [
+          "多个执行者被分配重叠写入范围，或并行状态源互相覆盖"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "仅提供并行隔离、所有权和集成门设计，不启动并行 Agent。",
+        "artifact_types": [
+          "ownership_map",
+          "parallel_work_policy"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-STA-003"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L03",
+          "locator": "",
+          "note": "并行工作需要状态隔离。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L07",
+          "locator": "",
+          "note": "并行工作需要显式所有权和集成门。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L13",
+          "locator": "",
+          "note": "并发 Agent 需要工作区和所有权隔离。"
+        }
+      ],
+      "source_aliases": [
+        "L03-C05",
+        "L07-C05",
+        "L13-C05"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-AUT-005",
+      "title": "自动化权限和目标最小化并保留人工门",
+      "domain": "HD-AUT",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "自动化只能获得目标所需的最小写权限；提交、合并、发消息、部署或修改外部状态等高影响动作必须有 allowlist、审计和相称的人工确认门。",
+      "applicability": {
+        "applies_when": [
+          "自动化可以写仓库、提交或合并代码、发消息、部署或修改外部系统"
+        ],
+        "not_applicable_when": [
+          "没有自治自动化，或自动化严格只读且不能改变外部状态"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "权限 allowlist、不可逆动作审批点、审计记录和最小目标范围彼此一致"
+        ],
+        "partial": [
+          "存在权限配置但过宽，或高影响动作没有独立确认和审计"
+        ],
+        "conflict": [
+          "循环目标限制写入范围，但运行凭证或平台权限允许更广操作"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "仅提供权限收窄和人工门设计建议，不修改平台权限或外部系统。",
+        "artifact_types": [
+          "approval_boundary",
+          "automation_permission_policy"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-AUT-001",
+        "HD-FND-003"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L13",
+          "locator": "",
+          "note": "自动化权限和目标应最小化并保留人工门槛。"
+        }
+      ],
+      "source_aliases": [
+        "L13-C06"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-AUT-006",
+      "title": "自动化触发类型匹配任务语义",
+      "domain": "HD-AUT",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "定时、事件或目标驱动的触发方式应匹配任务是否累积状态、是否要求幂等和如何终止，避免把独立轮询错误实现为持续目标循环。",
+      "applicability": {
+        "applies_when": [
+          "仓库存在定时、事件、目标驱动或其他自动触发的 Agent 工作"
+        ],
+        "not_applicable_when": [
+          "没有自动触发任务，所有 Agent 工作均由人工单次发起"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "调度配置、幂等规则、状态模型和停止条件共同说明触发语义"
+        ],
+        "partial": [
+          "触发配置存在，但没有说明状态累积、重复运行或完成语义"
+        ],
+        "conflict": [
+          "调度器按独立作业触发，而任务状态或目标按同一持续循环处理"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "仅提供触发语义和幂等边界设计，不创建调度任务。",
+        "artifact_types": [
+          "idempotency_contract",
+          "trigger_policy"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-AUT-001",
+        "HD-STA-005"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L13",
+          "locator": "",
+          "note": "触发类型应匹配累积目标或独立轮询语义。"
+        }
+      ],
+      "source_aliases": [
+        "L13-C07"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-BST-001",
+      "title": "统一安装、启动与基础验证入口",
+      "domain": "HD-BST",
+      "maturity": "L1",
+      "is_gate": true,
+      "requirement": "可运行仓库应提供可发现且彼此一致的标准安装、启动和基础验证命令，使新会话无需临时猜测即可开始。",
+      "applicability": {
+        "applies_when": [
+          "仓库包含可安装、可启动或可执行检查的软件产物"
+        ],
+        "not_applicable_when": [
+          "仓库是没有运行时产物的纯资料集合，并已定义资料校验方式"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "入口文档与任务脚本声明相同的安装、启动和基础验证命令"
+        ],
+        "partial": [
+          "命令存在但分散，或没有从干净环境验证的证据"
+        ],
+        "conflict": [
+          "README、Agent 指令、任务脚本或 CI 使用不同工具链或命令"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "把现有命令整合到一个标准入口并从根指令路由到该入口。",
+        "artifact_types": [
+          "agent_instruction",
+          "task_runner"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L06",
+          "locator": "",
+          "note": "标准化安装、启动和验证入口。"
+        }
+      ],
+      "source_aliases": [
+        "L06-C01"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-BST-002",
+      "title": "验证框架可用且修改前记录健康基线",
+      "domain": "HD-BST",
+      "maturity": "L2",
+      "is_gate": true,
+      "requirement": "仓库声明的测试或检查框架应有实际可用性证据，不能只凭配置文件或命令存在认定可用。用户于 2026-09-09 确认 R02：独立修改任务应在首次改动前，在目标 Worktree 运行与变更相称且已获授权的检查，记录任务、基线提交与工作树状态、命令、工作目录、运行时间、实际结果及已有失败；完成后用可比较结果区分已有失败与本次新增失败。无运行条件时标记无法验证，不伪造全绿或自动扩修无关问题。",
+      "applicability": {
+        "applies_when": [
+          "仓库声明存在测试、构建、静态检查或其他自动验证能力"
+        ],
+        "not_applicable_when": [
+          "仓库未声明自动验证能力，且已为当前产物定义人工验收方式"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "验证命令、最小测试样例和近期成功记录能够相互印证；已有正式失败基线时仍能证明验证入口可用，并明确非全绿状态",
+          "任务记录关联修改前的目标工作区、基线提交/工作树状态、检查选择依据、命令/目录、运行时间、结果和已有失败；完成后可追溯新增失败与未验证范围"
+        ],
+        "partial": [
+          "框架已配置但没有健康样例，或只能确认命令存在",
+          "有近期测试或开工前检查规则，但缺少本任务修改前基线，或缺少失败明细与前后可比较记录"
+        ],
+        "conflict": [
+          "文档宣称检查可用，但脚本、测试发现或 CI 结果显示相反结论",
+          "把修改后的结果冒充修改前基线，隐瞒已有失败，或无可比较证据就声称本次没有新增失败"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "补充修改前相称健康检查与基线记录模板，关联任务、提交/工作树、命令/目录、时间、结果、已有与新增失败；只预览并补充说明，不由取证器执行命令，不自动引入框架、安装依赖或修复无关问题。",
+        "artifact_types": [
+          "test_smoke",
+          "verification_guide"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-BST-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "anthropic-long-running@2025-11-26",
+          "document_id": "anthropic-long-running-agents",
+          "locator": "Getting up to speed",
+          "note": "来源建议新会话先恢复状态并检查环境；R02 将其提炼为修改前相称基线检查及前后失败对照，由用户于 2026-09-09 确认。网页仅以发布日期定位，不是不可变归档；详见 references/baseline-policy.md。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L06",
+          "locator": "",
+          "note": "验证框架需要实际可用的证据。"
+        }
+      ],
+      "source_aliases": [
+        "L06-C02"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-BST-003",
+      "title": "初始化与业务实现分阶段验收",
+      "domain": "HD-BST",
+      "maturity": "L2",
+      "is_gate": true,
+      "requirement": "新建或重搭仓库时，应先独立验收环境、启动、验证和状态入口，再开始业务功能实现。",
+      "applicability": {
+        "applies_when": [
+          "新仓库初始化或现有仓库进行大规模开发环境重搭"
+        ],
+        "not_applicable_when": [
+          "成熟仓库的局部功能变更不涉及初始化或环境重建"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "初始化计划、验收条件和检查点与业务工作项明确分离"
+        ],
+        "partial": [
+          "有搭建步骤但夹杂业务实现，或缺少初始化完成门槛"
+        ],
+        "conflict": [
+          "计划要求先完成初始化，但任务状态或提交记录同时推进未验证功能"
+        ],
+        "minimum_level": "recorded"
+      },
+      "remediation": {
+        "summary": "增加独立的初始化验收段和开始业务实现的进入条件。",
+        "artifact_types": [
+          "bootstrap_plan",
+          "verification_rule"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-BST-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L06",
+          "locator": "",
+          "note": "初始化与业务实现需要不同的验收目标。"
+        }
+      ],
+      "source_aliases": [
+        "L06-C04"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-FND-001",
+      "title": "五类 Harness 证据可发现",
+      "domain": "HD-FND",
+      "maturity": "L1",
+      "is_gate": true,
+      "requirement": "仓库应让 Agent 能发现指令、工具权限、执行环境、工作状态和验证反馈五类 Harness 证据，并识别缺失或冲突的子系统。",
+      "applicability": {
+        "applies_when": [
+          "仓库使用或准备使用编码 Agent"
+        ],
+        "not_applicable_when": [
+          "仓库明确不供 Agent 参与开发"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "根入口或仓库地图能路由到五类相互一致的证据"
+        ],
+        "partial": [
+          "部分子系统有工件，但权限、状态或反馈入口缺失"
+        ],
+        "conflict": [
+          "指令、实际工具配置、环境版本、状态或验证方式相互矛盾"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "按缺失子系统补充最小工件或路由，不为已有能力复制第二套入口。",
+        "artifact_types": [
+          "agent_instruction",
+          "repository_map"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L02",
+          "locator": "",
+          "note": "Harness 由指令、工具、环境、状态和反馈五个子系统构成。"
+        }
+      ],
+      "source_aliases": [
+        "L02-C01"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-FND-002",
+      "title": "失败经验形成可评估的 Harness 改进",
+      "domain": "HD-FND",
+      "maturity": "L3",
+      "is_gate": false,
+      "requirement": "重复失败应按 Harness 子系统归因并沉淀；重要改进应通过同模型、同任务或可比较基准确认效果，而不是只凭主观感受。",
+      "applicability": {
+        "applies_when": [
+          "Agent 失败会重复发生，或团队需要判断 Harness 改动是否有效"
+        ],
+        "not_applicable_when": [
+          "一次性实验没有可比较历史，也不形成长期 Harness"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "失败日志、复盘、规则来源和基准对照能串联问题、改动与结果"
+        ],
+        "partial": [
+          "记录了失败或改进，但没有归因框架、对照条件或结果证据"
+        ],
+        "conflict": [
+          "不同记录对同一失败原因或改进效果给出互斥结论"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "建立轻量失败记录，并为高价值 Harness 改动补充可比较的验证基准。",
+        "artifact_types": [
+          "failure_log",
+          "harness_benchmark"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-FND-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L01",
+          "locator": "",
+          "note": "失败归因和经验沉淀应有稳定位置。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L02",
+          "locator": "",
+          "note": "Harness 改进应通过失败记录或对照评估。"
+        }
+      ],
+      "source_aliases": [
+        "L01-C02",
+        "L02-C05"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-FND-003",
+      "title": "工具权限最小但足够",
+      "domain": "HD-FND",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "Agent 工具权限应覆盖已批准任务所需能力，同时明确允许、需询问和禁止边界，避免默认开放无关写入或外部访问。",
+      "applicability": {
+        "applies_when": [
+          "仓库或执行平台声明了 Agent 工具、沙箱或权限配置"
+        ],
+        "not_applicable_when": [
+          "当前只进行不调用工具的离线阅读"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "权限配置和仓库说明按任务能力划分允许、询问与禁止操作"
+        ],
+        "partial": [
+          "存在受限环境但缺少任务相关授权说明，或权限宽于实际需要"
+        ],
+        "conflict": [
+          "仓库规则要求限制操作，但平台配置开放了相反能力，或反之"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "记录最小所需能力与升级路径；平台级权限只诊断，不在本模块自动修改。",
+        "artifact_types": [
+          "agent_instruction",
+          "permission_policy"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-FND-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L02",
+          "locator": "",
+          "note": "Agent 工具权限应最小但足够。"
+        }
+      ],
+      "source_aliases": [
+        "L02-C03"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-GRF-001",
+      "title": "图化前证明协调收益高于编排成本",
+      "domain": "HD-GRF",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "采用图编排前应记录专业分工、并行收益、条件路由、恢复需求和独立验证等适用信号，并比较脚本、workflow 或单循环；三项经验只作建议，不是机械阈值。",
+      "applicability": {
+        "applies_when": [
+          "团队正在考虑或已经采用多 Agent、多个循环或显式图编排"
+        ],
+        "not_applicable_when": [
+          "单 Agent、确定性脚本、线性 workflow 或单循环已足以解决问题"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "架构决策比较替代方案、协调收益、状态复杂度和运行成本"
+        ],
+        "partial": [
+          "有图示或框架选择，但没有证明为何简单方案不足"
+        ],
+        "conflict": [
+          "设计声称需要图化，但实际流程没有分支、并行、恢复或独立角色"
+        ],
+        "minimum_level": "recorded"
+      },
+      "remediation": {
+        "summary": "仅提供图化适用性评估模板，不生成图编排代码。",
+        "artifact_types": [
+          "coordination_cost_review",
+          "graph_decision_record"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L14",
+          "locator": "",
+          "note": "图化前应通过明确适用性门槛。"
+        }
+      ],
+      "source_aliases": [
+        "L14-C01"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-GRF-002",
+      "title": "图显式定义节点、边、路由和失败路径",
+      "domain": "HD-GRF",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "已采用的图应版本化定义节点责任、输入输出、主干边、条件路由、失败回退、终止边和人工节点，并与编排实现一致。",
+      "applicability": {
+        "applies_when": [
+          "仓库已经采用图、状态机或复杂多节点编排"
+        ],
+        "not_applicable_when": [
+          "尚未采用图，或流程只是无分支的线性任务序列"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "graph spec、状态机或图示完整标出责任、路由、失败和终止边"
+        ],
+        "partial": [
+          "只有主干流程或节点名称，缺少条件、回退、失败或终止语义"
+        ],
+        "conflict": [
+          "图示、编排实现和节点责任对路由或失败处理给出不同定义"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "仅提供图契约缺口和路由设计建议，不选择或生成编排框架。",
+        "artifact_types": [
+          "graph_specification",
+          "routing_contract"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-GRF-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L14",
+          "locator": "",
+          "note": "图需要显式节点、边、路由和失败路径。"
+        }
+      ],
+      "source_aliases": [
+        "L14-C02"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-GRF-003",
+      "title": "共享状态具有 schema、所有者和合并语义",
+      "domain": "HD-GRF",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "多节点共享状态应有版本化 schema、字段所有者、读写边界、并发策略和确定性合并语义，避免以自由文本或共享工作区隐式通信。",
+      "applicability": {
+        "applies_when": [
+          "多个图节点读取或写入公共任务、证据、预算或运行状态"
+        ],
+        "not_applicable_when": [
+          "没有图编排，或节点之间不存在共享可变状态"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "类型 schema、reducer 或合并规则明确字段所有权、版本和冲突处理"
+        ],
+        "partial": [
+          "定义了共享字段，但没有所有者、并发控制或合并规则"
+        ],
+        "conflict": [
+          "多个节点可写同一字段却采用不兼容格式或覆盖顺序"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "仅提供共享状态 schema、所有权和冲突处理设计，不实现状态运行时。",
+        "artifact_types": [
+          "graph_state_schema",
+          "state_merge_policy"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-GRF-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L14",
+          "locator": "",
+          "note": "共享状态需要 schema、所有者和合并语义。"
+        }
+      ],
+      "source_aliases": [
+        "L14-C03"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-GRF-004",
+      "title": "节点私有上下文与公共交接数据隔离",
+      "domain": "HD-GRF",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "实现、验证和其他独立节点只接收职责所需上下文；公共交接通过明确 schema 传递，Checker 的私有判断不被 Maker 历史污染。",
+      "applicability": {
+        "applies_when": [
+          "图包含独立实现、验证或其他需要认知隔离的 Agent 节点"
+        ],
+        "not_applicable_when": [
+          "没有图编排，或全部节点都是无主观判断的确定性工具"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "节点输入映射、prompt 和 context policy 区分私有上下文与公共交接字段"
+        ],
+        "partial": [
+          "角色名称不同，但所有节点仍共享完整会话或未过滤历史"
+        ],
+        "conflict": [
+          "设计要求独立复核，但 Checker 输入包含 Maker 的全部推理和结论"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "仅提供节点输入和公共交接数据边界设计，不创建独立 Agent 节点。",
+        "artifact_types": [
+          "context_policy",
+          "node_interface"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-AUT-003",
+        "HD-GRF-003"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L14",
+          "locator": "",
+          "note": "节点私有上下文应与公共交接数据隔离。"
+        }
+      ],
+      "source_aliases": [
+        "L14-C04"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-GRF-005",
+      "title": "图支持检查点、恢复、重放和安全回退",
+      "domain": "HD-GRF",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "长时、昂贵或有副作用的图应保存可追溯检查点和 run ID，定义恢复、重放、幂等和安全回退边界，并验证恢复路径。",
+      "applicability": {
+        "applies_when": [
+          "图运行时间长、成本高、会修改状态或可能在中途失败"
+        ],
+        "not_applicable_when": [
+          "没有图编排，或图是短时、只读且可从头安全重跑的确定性流程"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "checkpointer、run ID、resume 或 rollback 文档和恢复演练相互一致"
+        ],
+        "partial": [
+          "保存了状态但没有恢复演练、幂等保证或副作用回退规则"
+        ],
+        "conflict": [
+          "恢复流程会重复不可逆副作用，或检查点与当前状态 schema 不兼容"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "仅提供检查点、恢复与回退契约建议，不实现或运行恢复机制。",
+        "artifact_types": [
+          "checkpoint_policy",
+          "graph_recovery_guide"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-GRF-003"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L14",
+          "locator": "",
+          "note": "图需要检查点保存、恢复、重放和安全回退。"
+        }
+      ],
+      "source_aliases": [
+        "L14-C05"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-GRF-006",
+      "title": "优化指标连接现实锚点",
+      "domain": "HD-GRF",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "图根据自动指标做路由或优化决策时，至少连接一个可校准的现实锚点，例如真实结果、业务指标、人工抽检或独立基准。",
+      "applicability": {
+        "applies_when": [
+          "图使用评分、奖励、成功率或其他指标自主选择路径或优化行为"
+        ],
+        "not_applicable_when": [
+          "没有图编排，或路由完全由静态确定性条件决定"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "优化指标、现实锚点、校准频率和偏差处理方式均有记录"
+        ],
+        "partial": [
+          "存在自动指标，但现实结果只偶尔人工查看且没有校准规则"
+        ],
+        "conflict": [
+          "内部评分持续改善，但真实结果、业务指标或人工抽检持续恶化"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "仅提供现实锚点和校准频率设计，不接入业务系统或外部数据。",
+        "artifact_types": [
+          "calibration_policy",
+          "evaluation_anchor"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-GRF-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L14",
+          "locator": "",
+          "note": "图的优化指标需要连接现实锚点。"
+        }
+      ],
+      "source_aliases": [
+        "L14-C06"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-GRF-007",
+      "title": "编排规模受审阅带宽和协调成本约束",
+      "domain": "HD-GRF",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "图的并发节点和循环数量应受集成负责人、审阅队列、预算、SLA 与协调成本约束；审阅容量不足时必须降低并发或停止扩展。",
+      "applicability": {
+        "applies_when": [
+          "图包含并行节点、多个循环或会产生持续人工审阅队列"
+        ],
+        "not_applicable_when": [
+          "没有图编排，或单节点流程不会产生并发和协调负担"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "并发上限、集成责任、审阅 SLA、预算和降级规则可追溯"
+        ],
+        "partial": [
+          "设置了并发数，但没有审阅容量、集成责任或成本反馈"
+        ],
+        "conflict": [
+          "编排允许的并发持续超过可用审阅或集成容量"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "仅提供并发上限、审阅容量和协调成本约束设计，不扩展编排规模。",
+        "artifact_types": [
+          "concurrency_policy",
+          "review_capacity_plan"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-AUT-004",
+        "HD-GRF-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L14",
+          "locator": "",
+          "note": "编排规模受审阅带宽和协调成本约束。"
+        }
+      ],
+      "source_aliases": [
+        "L14-C07"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-HYG-001",
+      "title": "退出状态可交接且不新增基线失败",
+      "domain": "HD-HYG",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "会话退出应留下可交接状态和验证结论；目标基线应全绿，若仓库已有正式失败基线，本次不得新增失败并必须显式交接。",
+      "applicability": {
+        "applies_when": [
+          "持续开发、跨会话工作或仓库可能存在已知红灯"
+        ],
+        "not_applicable_when": [
+          "完全不产生仓库状态变化的只读研究会话"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "退出清单同时记录验证结果、Git 状态、进度、阻塞和已知失败基线"
+        ],
+        "partial": [
+          "有退出检查但缺少基线差异、交接字段或失败说明"
+        ],
+        "conflict": [
+          "退出规则要求所有检查全绿，但正式基线允许已知失败且没有差异化处理"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "建立退出清单；若有历史红灯，记录正式基线并执行不得新增失败的差异门槛。",
+        "artifact_types": [
+          "exit_checklist",
+          "failure_baseline"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-STA-004",
+        "HD-VER-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L12",
+          "locator": "",
+          "note": "退出同时检查验证与交接，并区分既有失败和本次回归。"
+        }
+      ],
+      "source_aliases": [
+        "L12-C01",
+        "L12-C06"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-HYG-002",
+      "title": "清理动作可预览、幂等且不覆盖用户工作",
+      "domain": "HD-HYG",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "自动清理或修复必须先预览目标，限制在明确路径内，重复执行应幂等，并且不得删除或覆盖未确认的用户工作。",
+      "applicability": {
+        "applies_when": [
+          "仓库存在自动清理、格式修复、生成物删除或状态重置脚本"
+        ],
+        "not_applicable_when": [
+          "仓库没有自动清理能力，且当前流程只报告可疑工件"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "清理器支持 dry-run、路径白名单、幂等测试和失败回滚或停止"
+        ],
+        "partial": [
+          "清理脚本范围固定但不能预览，或缺少重复执行与用户改动保护测试"
+        ],
+        "conflict": [
+          "脚本会删除文档声明应保留的文件，或忽略仓库的未提交工作保护规则"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "为现有清理器增加预览、明确路径、幂等和未提交改动保护，不自动删除可疑文件。",
+        "artifact_types": [
+          "cleanup_policy",
+          "cleanup_test"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-HYG-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L12",
+          "locator": "",
+          "note": "清理动作需要预览、幂等和用户工作保护。"
+        }
+      ],
+      "source_aliases": [
+        "L12-C03"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-HYG-003",
+      "title": "Harness 定期复验质量并复核组件价值",
+      "domain": "HD-HYG",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "长期或复杂 Harness 应周期性复验质量基准，并随模型、任务和失败模式变化，对每个组件作保留、简化、替换或移除的证据化决定。",
+      "applicability": {
+        "applies_when": [
+          "仓库 Harness 较复杂、变更频繁或所用模型和 Agent 能力持续升级"
+        ],
+        "not_applicable_when": [
+          "一次性、小型仓库尚未形成需要周期维护的 Harness 组件集合"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "维护任务、基准记录、组件清单和保留或移除决策可相互追溯"
+        ],
+        "partial": [
+          "有周期清理或基准，但没有逐组件价值复核和变更依据"
+        ],
+        "conflict": [
+          "组件被长期保留却持续降低基准表现，或删除决定没有对照证据"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "仅提供周期复验和组件价值评审设计，不自动删除、替换或运行 Harness 组件。",
+        "artifact_types": [
+          "harness_component_review",
+          "maintenance_policy"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-FND-002",
+        "HD-KNW-003"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L12",
+          "locator": "",
+          "note": "需要周期检查质量漂移并复核 Harness 组件价值。"
+        }
+      ],
+      "source_aliases": [
+        "L12-C04",
+        "L12-C05"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-INS-001",
+      "title": "根指令是精炼的条件路由",
+      "domain": "HD-INS",
+      "maturity": "L1",
+      "is_gate": true,
+      "requirement": "根级 Agent 指令应保留项目概览、快速开始、少量硬约束和带适用条件的专题链接，而不是堆叠全部历史知识。",
+      "applicability": {
+        "applies_when": [
+          "仓库使用或准备使用编码 Agent，需要可发现的根指令入口"
+        ],
+        "not_applicable_when": [
+          "仓库明确不供 Agent 参与开发；入口尚未创建本身不能作为不适用理由"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "入口短而完整，关键命令与硬约束可直接发现，专题知识通过条件链接展开"
+        ],
+        "partial": [
+          "入口可用但主题混杂、路由不足或包含大量低相关历史说明"
+        ],
+        "conflict": [
+          "根入口与其链接的专题文档给出不兼容规则或失效路径"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "保留根入口中的关键导航，把可独立适用的专题内容迁移为条件路由。",
+        "artifact_types": [
+          "agent_instruction",
+          "instruction_topic"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-FND-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L02",
+          "locator": "",
+          "note": "入口文件应短小并路由到详细事实。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L04",
+          "locator": "",
+          "note": "根指令应承担路由，而不是百科全书。"
+        }
+      ],
+      "source_aliases": [
+        "L02-C02",
+        "L04-C01"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-INS-002",
+      "title": "指令优先级与读取条件明确",
+      "domain": "HD-INS",
+      "maturity": "L2",
+      "is_gate": true,
+      "requirement": "硬约束、建议和背景信息应有清晰优先级；每个专题指令链接应说明何种任务或作用域必须读取。",
+      "applicability": {
+        "applies_when": [
+          "仓库包含多类规则、多个指令文件或专题文档路由"
+        ],
+        "not_applicable_when": [
+          "仓库只有一个短小、无链接且无规则冲突的入口"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "规则分层明确，链接附近写明适用任务、目录或触发条件"
+        ],
+        "partial": [
+          "文件已经拆分，但建议与强制要求混写或链接缺少读取条件"
+        ],
+        "conflict": [
+          "不同层级规则未声明优先级并对同一行为给出互斥要求"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "标记必须、建议与背景层级，并为专题链接补充最小读取条件。",
+        "artifact_types": [
+          "agent_instruction",
+          "instruction_router"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-INS-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L04",
+          "locator": "",
+          "note": "规则需要优先级，专题文档需要读取条件。"
+        }
+      ],
+      "source_aliases": [
+        "L04-C02",
+        "L04-C03"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-KNW-001",
+      "title": "新会话可发现五类基本事实",
+      "domain": "HD-KNW",
+      "maturity": "L1",
+      "is_gate": true,
+      "requirement": "新会话应能从仓库入口回答项目目的、系统结构、标准启动方式、验证方式和当前工作状态五类基本问题。",
+      "applicability": {
+        "applies_when": [
+          "持续开发且会由新会话或新协作者接手的仓库"
+        ],
+        "not_applicable_when": [
+          "一次性、单文件且无需移交的短期实验"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "README、Agent 入口、架构说明、任务脚本和状态记录共同回答五类问题"
+        ],
+        "partial": [
+          "事实存在但分散、入口未路由或缺少当前状态"
+        ],
+        "conflict": [
+          "多个候选来源对结构、命令、验证或当前状态给出不同答案"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "在已有入口补充缺失事实的权威链接，不复制完整内容。",
+        "artifact_types": [
+          "agent_instruction",
+          "repository_map"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-FND-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L03",
+          "locator": "",
+          "note": "新会话应从仓库回答五类基本问题。"
+        }
+      ],
+      "source_aliases": [
+        "L03-C01"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-KNW-002",
+      "title": "作用域知识就近且权威唯一",
+      "domain": "HD-KNW",
+      "maturity": "L2",
+      "is_gate": true,
+      "requirement": "影响 Agent 决策的知识应靠近对应代码作用域；同一事实只有一个权威位置，其他位置通过稳定链接或显式同步关系引用。",
+      "applicability": {
+        "applies_when": [
+          "多模块、多服务或存在多个规则和说明文件的仓库"
+        ],
+        "not_applicable_when": [
+          "单一小模块且每类事实只有一个清晰位置"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "模块约束位于对应目录附近，重复位置明确指向同一权威来源"
+        ],
+        "partial": [
+          "知识已入库但远离作用域，或多个副本没有维护责任"
+        ],
+        "conflict": [
+          "不同文件对同一版本、命令、架构或状态事实给出不兼容结论"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "指定一个权威位置，将其余副本改成带作用域说明的链接或同步声明。",
+        "artifact_types": [
+          "authority_map",
+          "scoped_documentation"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-KNW-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L03",
+          "locator": "",
+          "note": "作用域知识应靠近代码，同一事实应有唯一权威位置。"
+        }
+      ],
+      "source_aliases": [
+        "L03-C02",
+        "L03-C03"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-KNW-003",
+      "title": "关键文档和规则具有维护生命周期",
+      "domain": "HD-KNW",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "承载关键约束的文档和规则应记录来源、适用范围、维护责任与废弃条件，并在相关代码变化时进入审查或验证流程。",
+      "applicability": {
+        "applies_when": [
+          "仓库用文档或指令承载长期架构、运行、验证或协作约束"
+        ],
+        "not_applicable_when": [
+          "仓库没有长期规则，且全部行为由单一可执行契约完整表达"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "规则有来源和作用域，相关 PR 模板、所有者或 CI 提醒代码与文档联动"
+        ],
+        "partial": [
+          "文档可发现但缺少维护责任、代码联动或删除条件"
+        ],
+        "conflict": [
+          "重复规则、失效路径或不同版本说明长期并存且没有权威裁决"
+        ],
+        "minimum_level": "recorded"
+      },
+      "remediation": {
+        "summary": "为高影响规则补来源、适用和废弃信息，并将相关变更纳入审查提醒。",
+        "artifact_types": [
+          "documentation_policy",
+          "review_checklist"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-INS-002",
+        "HD-KNW-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L03",
+          "locator": "",
+          "note": "关键文档更新应与代码变化联动。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L04",
+          "locator": "",
+          "note": "规则需要来源、生命周期以及重复和冲突审计。"
+        }
+      ],
+      "source_aliases": [
+        "L03-C04",
+        "L04-C04",
+        "L04-C05"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-OBS-001",
+      "title": "关键运行路径暴露结构化诊断信号",
+      "domain": "HD-OBS",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "可运行应用、服务或作业应在关键生命周期、错误和跨步骤路径暴露可关联的结构化信号，使失败能够定位而不绑定特定观测技术栈。",
+      "applicability": {
+        "applies_when": [
+          "仓库包含运行中的应用、服务、后台作业或多步骤执行流程"
+        ],
+        "not_applicable_when": [
+          "纯静态资料或没有运行生命周期的简单库"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "日志、健康检查或追踪约定包含组件、阶段、错误和关联标识"
+        ],
+        "partial": [
+          "有日志或健康检查，但缺少结构化字段、关联标识或关键失败路径"
+        ],
+        "conflict": [
+          "运行手册依赖的信号未由当前配置产生，或不同组件字段语义冲突"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "为关键路径补充最小结构化字段和关联标识，不强制采用指定厂商或平台。",
+        "artifact_types": [
+          "observability_schema",
+          "runtime_logging"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-BST-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L11",
+          "locator": "",
+          "note": "关键运行路径应暴露可诊断的结构化信号。"
+        }
+      ],
+      "source_aliases": [
+        "L11-C01"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-OBS-002",
+      "title": "评估结论使用显式维度和证据",
+      "domain": "HD-OBS",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "包含主观或多维质量判断的任务应使用显式评分维度、锚点、门槛和证据栏生成结论，避免只给总体印象。",
+      "applicability": {
+        "applies_when": [
+          "质量验收包含可读性、设计、体验、安全或其他主观和多维判断"
+        ],
+        "not_applicable_when": [
+          "任务结果完全由单一确定性检查判定"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "评估 rubric 或审查清单定义维度、阈值、评分锚点和对应证据"
+        ],
+        "partial": [
+          "有检查清单但缺少锚点、通过阈值或证据记录"
+        ],
+        "conflict": [
+          "评估 rubric、任务验收标准和实际完成门槛不一致"
+        ],
+        "minimum_level": "recorded"
+      },
+      "remediation": {
+        "summary": "为需要判断的质量维度补充可解释锚点、门槛和证据栏。",
+        "artifact_types": [
+          "evaluation_rubric",
+          "review_checklist"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-SCP-002",
+        "HD-VER-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L11",
+          "locator": "",
+          "note": "评估结论应按显式维度和证据生成。"
+        }
+      ],
+      "source_aliases": [
+        "L11-C03"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-OBS-003",
+      "title": "观测数据具有敏感信息和保留边界",
+      "domain": "HD-OBS",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "记录输入、输出、用户数据或模型交互时，应声明脱敏、采样、访问和保留边界，防止诊断能力泄露敏感内容。",
+      "applicability": {
+        "applies_when": [
+          "日志、追踪、评估或任务记录可能包含用户数据、凭证或私有内容"
+        ],
+        "not_applicable_when": [
+          "观测数据仅包含无敏感性的本地技术计数，且不会持久化输入输出"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "日志 schema、脱敏规则、采样和保留策略明确覆盖敏感字段"
+        ],
+        "partial": [
+          "有泛化的保密要求，但没有字段级处理或保留边界"
+        ],
+        "conflict": [
+          "代码记录了策略明确禁止或要求脱敏的字段"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "为观测字段增加数据分类、脱敏和保留约束，并避免收集非必要内容。",
+        "artifact_types": [
+          "data_handling_policy",
+          "observability_schema"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-OBS-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L11",
+          "locator": "",
+          "note": "观测数据需要敏感信息和保留边界。"
+        }
+      ],
+      "source_aliases": [
+        "L11-C05"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-SCP-001",
+      "title": "任务边界明确且每次改动新建独立 Worktree",
+      "domain": "HD-SCP",
+      "maturity": "L2",
+      "is_gate": true,
+      "requirement": "每个非平凡任务应声明包含范围、非目标和当前工作项；未建立隔离与所有权前，默认只有一个 active 工作项。用户于 2026-09-09 新增规则：每次独立修改任务开始前新建专用 Git Worktree 和分支，实际修改在其中完成，不以复用旧 Worktree 或仅切换分支替代；纯只读任务不要求创建。",
+      "applicability": {
+        "applies_when": [
+          "任何会修改 Git 仓库文件的任务，包括小修复和文档修改；非平凡任务还需范围、非目标和工作上限"
+        ],
+        "not_applicable_when": [
+          "纯只读探索没有仓库文件修改，且已定义时间盒与明确产物"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "当前任务记录包含范围、非目标和唯一 active 状态",
+          "任务记录包含范围、非目标、当前工作项及每次修改前新建专用 Worktree/分支的明确规则",
+          "可追溯任务记录将本次任务关联到创建操作、基线提交和实际工作目录；仅存在 .git 文件不能证明新建与隔离"
+        ],
+        "partial": [
+          "有任务列表但缺非目标，或多个工作项同时处于 active",
+          "有任务边界，但仅要求切换分支、复用已有 Worktree，或允许小改动直接写主工作区",
+          "有新建 Worktree 的制度，但本次任务关联和创建先后顺序缺少证据时，不能声称执行已验证"
+        ],
+        "conflict": [
+          "不同计划或状态源声明了互不兼容的当前工作范围",
+          "根规则要求新建 Worktree，但下级规则或任务记录允许直接修改主工作区"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "补充每次独立修改任务新建 Worktree/分支、记录基线的规则，同时保留范围、非目标和工作上限要求；本补强只生成规则或任务模板，不由取证器创建工作区。",
+        "artifact_types": [
+          "task_specification",
+          "work_item_policy"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-KNW-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L07",
+          "locator": "",
+          "note": "默认 WIP 为一，并明确任务包含与不包含的范围。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L11",
+          "locator": "",
+          "note": "任务范围、验收和排除项应形成可追溯过程工件。"
+        }
+      ],
+      "source_aliases": [
+        "L07-C01",
+        "L07-C02",
+        "L11-C02"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-SCP-002",
+      "title": "任务具有行为级完成定义",
+      "domain": "HD-SCP",
+      "maturity": "L2",
+      "is_gate": true,
+      "requirement": "任务定义应描述预期行为、输入输出、边界、验收证据和停止条件，使完成标准不依赖 Agent 的隐式判断。",
+      "applicability": {
+        "applies_when": [
+          "功能、修复或其他具有可观察结果的开发任务"
+        ],
+        "not_applicable_when": [
+          "纯探索任务已定义时间盒、研究问题和交付产物"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "任务规格或验收清单包含行为、边界和可复现验证路径"
+        ],
+        "partial": [
+          "只有实现步骤或宽泛目标，缺少边界或验收证据"
+        ],
+        "conflict": [
+          "任务说明、测试和人工验收对预期行为给出不同定义"
+        ],
+        "minimum_level": "declared"
+      },
+      "remediation": {
+        "summary": "在现有任务记录补充行为、边界、非目标和验证要求。",
+        "artifact_types": [
+          "acceptance_criteria",
+          "task_specification"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-SCP-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L01",
+          "locator": "",
+          "note": "关键任务需要可验证的完成定义。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L07",
+          "locator": "",
+          "note": "工作项应具有行为级完成证据。"
+        }
+      ],
+      "source_aliases": [
+        "L01-C01",
+        "L07-C03"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-SCP-003",
+      "title": "核心正确性优先于非必要重构",
+      "domain": "HD-SCP",
+      "maturity": "L2",
+      "is_gate": true,
+      "requirement": "功能或修复尚未满足核心正确性验证时，应限制不属于完成定义的重构、整理和扩展；通过后再单独评估优化范围。",
+      "applicability": {
+        "applies_when": [
+          "功能或缺陷修复尚未通过核心行为验证，同时出现额外重构或优化建议"
+        ],
+        "not_applicable_when": [
+          "任务本身就是有边界且有回归保护的重构"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "工作规则和提交拆分明确先满足行为验收，再处理独立优化"
+        ],
+        "partial": [
+          "任务有范围，但没有说明正确性未达标时如何处理顺手重构"
+        ],
+        "conflict": [
+          "任务要求最小修复，计划或改动却同时扩大到无关重构"
+        ],
+        "minimum_level": "recorded"
+      },
+      "remediation": {
+        "summary": "把非必要重构移出当前范围，保留为后续候选并先完成核心验证。",
+        "artifact_types": [
+          "follow_up_item",
+          "scope_rule"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-SCP-002",
+        "HD-VER-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L09",
+          "locator": "",
+          "note": "正确性未达标前应限制非必要重构。"
+        }
+      ],
+      "source_aliases": [
+        "L09-C05"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-STA-001",
+      "title": "任务状态持久化且中断后先核对再恢复",
+      "domain": "HD-STA",
+      "maturity": "L2",
+      "is_gate": true,
+      "requirement": "跨会话任务应在权威持久工件中记录当前状态、已完成步骤、剩余步骤、阻塞、验证结果和下一步；阻塞必须说明原因、恢复条件和退出规则，不得标记为完成。用户于 2026-09-13 确认：启动或异常中断后的新会话应先读取清单与最近检查点，核对遗留 in_progress 项的实际改动和验证证据，再决定续作、补验证或更新状态；没有结束记录也必须能恢复。不因状态未更新重复实现，不盲目重放可能有外部副作用的步骤。",
+      "applicability": {
+        "applies_when": [
+          "任务跨会话、可能中断或需要移交给其他开发者或 Agent"
+        ],
+        "not_applicable_when": [
+          "可在单次短会话完成且无需交接的一次性工作"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "持久状态包含当前工作项、已完成/剩余步骤、最近验证、下一步及阻塞恢复条件",
+          "中断或等价受控恢复演练记录显示新会话先读取并核对实际文件/结果，再接续工作；结论限定到已核验任务"
+        ],
+        "partial": [
+          "有进度和恢复规则，但没有恢复记录或缺少已做/剩余步骤",
+          "依赖正常会话结束时保存，或只有 in_progress 标签，无法判断实际完成程度"
+        ],
+        "conflict": [
+          "进度文件、任务清单和 Git 状态对已完成工作给出不同结论",
+          "未核对遗留实现就重新执行，或把未更新状态直接当作尚未开始/已经完成"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "补齐及时持久化的最小检查点与启动核对顺序；优先复用已有记录位置，未知执行结果保留待核验，不自动重试。",
+        "artifact_types": [
+          "handoff_record",
+          "progress_record"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-SCP-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L01",
+          "locator": "",
+          "note": "新会话需要快速理解当前状态。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L05",
+          "locator": "",
+          "note": "持久工件记录当前状态和下一步。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L06",
+          "locator": "",
+          "note": "初始化后新会话能够发现进度和下一任务。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L07",
+          "locator": "",
+          "note": "阻塞状态需要原因、恢复条件和明确退出规则。"
+        }
+      ],
+      "source_aliases": [
+        "L01-C03",
+        "L05-C01",
+        "L06-C03",
+        "L07-C04"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-STA-002",
+      "title": "关键决策保留理由和否决方案",
+      "domain": "HD-STA",
+      "maturity": "L2",
+      "is_gate": true,
+      "requirement": "非显然的架构、依赖或范围决策应持久记录结论、理由、否决方案和重新评估条件。",
+      "applicability": {
+        "applies_when": [
+          "任务包含会影响后续实现的非显然技术或产品决策"
+        ],
+        "not_applicable_when": [
+          "当前工作没有需要后续会话继承的非显然决策"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "ADR、决策记录或设计文档保存结论、理由、替代方案和状态"
+        ],
+        "partial": [
+          "只记录最终结论，没有理由、否决方案或重新评估条件"
+        ],
+        "conflict": [
+          "决策记录与当前代码、架构文档或后续决定不一致且未标记废弃"
+        ],
+        "minimum_level": "recorded"
+      },
+      "remediation": {
+        "summary": "为关键决策补充轻量记录，说明为何选择及何时需要重审。",
+        "artifact_types": [
+          "architecture_decision",
+          "decision_record"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-STA-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L05",
+          "locator": "",
+          "note": "关键决策需要保存原因和否决方案。"
+        }
+      ],
+      "source_aliases": [
+        "L05-C02"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-STA-003",
+      "title": "实现前建立权威清单并逐项及时持久化状态",
+      "domain": "HD-STA",
+      "maturity": "L2",
+      "is_gate": true,
+      "requirement": "多项或可能中断的开发应有稳定的权威工作清单，每项至少绑定稳定 ID、目标行为、验证方式、状态、证据和下一步。用户于 2026-09-13 确认：需求实现前先建立或更新持久清单；开始某项实现前先持久写入 in_progress，完成并验证后立即回写 done 及验证结果，不等会话结束才批量更新。复用已有清单，允许明确映射 pending/not_started、in_progress/active、done/passing 等状态；会话结束核对权威状态，再同步派生进度和交接工件，并声明外部系统的同步责任。",
+      "applicability": {
+        "applies_when": [
+          "开发包含多个工作项、跨会话进度或外部任务系统"
+        ],
+        "not_applicable_when": [
+          "单一短期任务可由一个完整任务规格表达全部状态"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "清单有稳定 ID、目标行为、验证方式、状态、证据、下一步及权威说明",
+          "任务关联的清单创建、开始前状态更新和验证后完成更新有可定位时序记录，并核对过对应改动与结果"
+        ],
+        "partial": [
+          "清单存在但字段、更新触发点或时序记录不完整；仅有规则不能证明已执行",
+          "只在会话结束批量更新状态，或只有当前状态而无法判断更新先后"
+        ],
+        "conflict": [
+          "多个清单或外部系统对同一工作项状态给出不同结论且无同步规则",
+          "实现开始后才写 in_progress，未验证先写 done，或持久状态与实际改动不一致且无恢复记录"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "复用权威清单，补齐实现前规划、开始前进行中、验证后即时完成的规则与最小字段模板，不由 Doctor 实时修改任务状态。",
+        "artifact_types": [
+          "state_schema",
+          "work_item_registry"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-SCP-001",
+        "HD-STA-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L08",
+          "locator": "",
+          "note": "功能清单是结构化权威状态，并绑定行为、验证、状态和证据。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L12",
+          "locator": "",
+          "note": "进度、阻塞和下一步应写回权威状态。"
+        }
+      ],
+      "source_aliases": [
+        "L08-C01",
+        "L08-C02",
+        "L08-C04",
+        "L12-C02"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-STA-004",
+      "title": "改动完成后 Git 提交并留下可恢复交接",
+      "domain": "HD-STA",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "会话交接应记录未验证项、阻塞、验证结果和工作树状态。用户于 2026-09-09 新增规则：每次独立改动完成并验证后必须形成仅包含本任务改动的 Git 提交，记录提交 SHA、范围与验证结果；进度说明或工作树状态不能替代提交。无文件变化不制造空提交，提交失败不能声称完成。",
+      "applicability": {
+        "applies_when": [
+          "任何使用 Git 管理且产生文件修改的任务，无论是否跨会话或需要移交"
+        ],
+        "not_applicable_when": [
+          "纯只读任务或经确认没有实际文件变更"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "仓库规则要求每次改动完成并验证后进行范围清晰的 Git 提交，交接可追溯到任务、提交 SHA、验证和剩余状态"
+        ],
+        "partial": [
+          "只写进度说明或 Git 状态，没有每次完成后提交的明确规则",
+          "有提交规则，但本次任务缺少可核验提交记录，不能把口头声称已提交判为执行已验证"
+        ],
+        "conflict": [
+          "交接声称工作已验证，但提交边界、测试记录或工作树显示相反状态",
+          "交接宣称本次改动已完成提交，但任务对应改动仍未提交或提交混入无关用户修改"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "补充改动完成后提交、显式文件范围、提交 SHA 与验证记录的规则；提交失败须报告阻塞，不自动暂存无关文件、推送、合并或改写历史。",
+        "artifact_types": [
+          "checkpoint_policy",
+          "handoff_record"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-STA-001",
+        "HD-VER-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L05",
+          "locator": "",
+          "note": "交接应包含未验证项、阻塞、验证结果和可恢复检查点。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L06",
+          "locator": "",
+          "note": "初始化后应留下干净且经过验证的检查点。"
+        }
+      ],
+      "source_aliases": [
+        "L05-C03",
+        "L05-C04",
+        "L06-C05"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-STA-005",
+      "title": "状态转换由证据门控且可重新打开",
+      "domain": "HD-STA",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "工作项只有在绑定验证证据后才能进入通过状态；依赖变化、回归失败、证据失效或规范改变时，必须能够记录原因并重新打开。 用户于 2026-09-13 确认：逐项完成状态须在适用验证通过后立即持久化，绑定真实验证时间和结果；验证失败保持 in_progress，外部阻塞记 blocked 并给恢复条件，证据失效时带原因重新打开。代码已完成但状态未更新时先核验再补状态，不补造历史时间。",
+      "applicability": {
+        "applies_when": [
+          "工作清单包含 passing、done 或其他完成状态"
+        ],
+        "not_applicable_when": [
+          "状态清单只记录探索阶段且不作通过声明"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "状态规则定义通过门槛、证据引用、失效条件和 reopen 转换"
+        ],
+        "partial": [
+          "通过状态需要证据，但没有证据失效或重新验证路径",
+          "只凭代码已写完或勾选完成而缺少对应验证记录、及时更新或失败/阻塞转换规则"
+        ],
+        "conflict": [
+          "清单保持通过状态，但关联回归、依赖或规范已明确失效"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "补充逐项完成证据、即时状态更新、blocked 恢复条件和证据失效后的重新打开流程。",
+        "artifact_types": [
+          "evidence_record",
+          "state_transition_policy"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-STA-003",
+        "HD-VER-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L08",
+          "locator": "",
+          "note": "状态转换由验证门控，并在证据失效时回退。"
+        }
+      ],
+      "source_aliases": [
+        "L08-C03",
+        "L08-C05"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-STA-006",
+      "title": "连续性策略适配任务长度与目标模型",
+      "domain": "HD-STA",
+      "maturity": "L4",
+      "is_gate": true,
+      "requirement": "长时或多模型任务应明确何时压缩上下文、重置会话、生成交接或切换模型，并确保权威状态不依赖任何单一上下文窗口。",
+      "applicability": {
+        "applies_when": [
+          "仓库使用多种模型、长时任务或会主动切换上下文策略"
+        ],
+        "not_applicable_when": [
+          "任务均为短时单会话，且不在模型或上下文之间迁移"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "Agent 配置、任务规范和交接规则说明不同长度或模型下的连续性策略"
+        ],
+        "partial": [
+          "存在压缩或交接习惯，但没有触发条件、权威状态或恢复验证"
+        ],
+        "conflict": [
+          "不同模型配置要求不兼容的状态格式或交接时机"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "仅提供上下文压缩、会话重置和模型切换策略建议，不自动切换模型或会话。",
+        "artifact_types": [
+          "context_strategy",
+          "handoff_policy"
+        ],
+        "risk": "high"
+      },
+      "dependencies": [
+        "HD-STA-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L05",
+          "locator": "",
+          "note": "连续性策略应适配任务长度和目标模型。"
+        }
+      ],
+      "source_aliases": [
+        "L05-C05"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-VER-001",
+      "title": "完成声明绑定可执行验证证据",
+      "domain": "HD-VER",
+      "maturity": "L2",
+      "is_gate": true,
+      "requirement": "Agent 或任务模板只有在执行适用验证并记录命令、结果与未验证范围后，才可声明工作完成。",
+      "applicability": {
+        "applies_when": [
+          "仓库或任务存在可执行检查、人工验收步骤或其他可复现验证"
+        ],
+        "not_applicable_when": [
+          "纯探索任务只承诺时间盒和研究产物，不作行为完成声明"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "Agent 指令、任务模板或完成记录明确列出验证命令、结果和限制"
+        ],
+        "partial": [
+          "命令可发现但没有进入完成门槛，或结果未被记录"
+        ],
+        "conflict": [
+          "完成声明与测试、构建、CI 或人工验收证据相互矛盾"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "把已有验证入口加入完成定义，并要求记录结果和无法验证的范围。",
+        "artifact_types": [
+          "completion_template",
+          "verification_rule"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-BST-001",
+        "HD-SCP-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L01",
+          "locator": "",
+          "note": "完成声明必须附带验证证据。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L02",
+          "locator": "",
+          "note": "验证反馈应显式且可执行。"
+        }
+      ],
+      "source_aliases": [
+        "L01-C04",
+        "L02-C04"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-VER-002",
+      "title": "完成由分层且近期的终止证据门控",
+      "domain": "HD-VER",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "完成条件应按变更适用性组合静态、行为和系统级检查；完成声明必须附带最近实际执行的命令、结果、失败项和未验证范围。",
+      "applicability": {
+        "applies_when": [
+          "持续开发仓库存在一个或多个可运行验证层级"
+        ],
+        "not_applicable_when": [
+          "某个高成本验证层与当前变更表面无关；基础完成证据仍然适用"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "贡献规则、任务模板和验证记录共同定义适用层级并引用最近结果"
+        ],
+        "partial": [
+          "有检查命令但层级选择、结果记录或未验证范围不完整"
+        ],
+        "conflict": [
+          "任务、CI 和交接模板对完成所需检查给出不同要求"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "把现有检查按适用层级加入终止门槛，并标准化命令、结果和限制的记录。",
+        "artifact_types": [
+          "completion_evidence",
+          "verification_matrix"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-BST-002",
+        "HD-VER-001"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L09",
+          "locator": "",
+          "note": "完成定义需要可执行、分层并带最近运行证据的终止条件。"
+        }
+      ],
+      "source_aliases": [
+        "L09-C01",
+        "L09-C02"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-VER-003",
+      "title": "失败反馈可定位并指向下一动作",
+      "domain": "HD-VER",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "自动检查、持续集成和运行诊断的失败输出应关联组件或步骤，说明现象、原因或约束，并给出修复方向与相关证据。",
+      "applicability": {
+        "applies_when": [
+          "仓库存在自定义检查、CI 注释或运行时诊断输出"
+        ],
+        "not_applicable_when": [
+          "仓库没有自定义失败输出，且上游工具信息已经可直接定位和处理"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "失败消息包含位置、组件或步骤、约束原因、修复方向和证据链接"
+        ],
+        "partial": [
+          "失败可以定位，但缺少原因、下一动作或关联证据"
+        ],
+        "conflict": [
+          "错误消息建议的修复方式与仓库规则或实际通过条件相反"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "为高频或自定义失败补充位置、原因、修复方向和证据引用。",
+        "artifact_types": [
+          "troubleshooting_guide",
+          "validation_message"
+        ],
+        "risk": "low"
+      },
+      "dependencies": [
+        "HD-VER-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L09",
+          "locator": "",
+          "note": "验证失败需要可操作反馈。"
+        },
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L11",
+          "locator": "",
+          "note": "失败信号应关联组件、步骤和下一动作。"
+        }
+      ],
+      "source_aliases": [
+        "L09-C03",
+        "L11-C04"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-VER-004",
+      "title": "验证层级匹配变更表面并覆盖真实边界",
+      "domain": "HD-VER",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "验证层级应与变更表面相匹配；涉及跨模块、外部依赖或用户流程时，至少一条关键路径应穿过真实组件边界和副作用。",
+      "applicability": {
+        "applies_when": [
+          "变更涉及跨模块调用、外部依赖、持久化、副作用或端到端用户流程"
+        ],
+        "not_applicable_when": [
+          "库或局部变更没有可识别的跨组件流程，并已用契约或集成检查覆盖实际边界"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "测试矩阵说明何时使用单元、契约、集成或端到端验证，关键路径使用真实边界"
+        ],
+        "partial": [
+          "存在 E2E 或集成测试，但无法确认适用规则、真实边界或关键流程覆盖"
+        ],
+        "conflict": [
+          "变更触及跨组件边界，但完成门槛只要求不经过该边界的局部测试"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "按变更表面补充最小跨边界验证；没有真实跨组件流程时记录不适用理由。",
+        "artifact_types": [
+          "integration_test",
+          "verification_matrix"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-BST-002",
+        "HD-VER-002"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L10",
+          "locator": "",
+          "note": "验证层级应匹配变更表面，关键流程覆盖真实组件边界。"
+        }
+      ],
+      "source_aliases": [
+        "L10-C01",
+        "L10-C02"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    },
+    {
+      "id": "HD-VER-005",
+      "title": "跨层验证包含失败与资源路径",
+      "domain": "HD-VER",
+      "maturity": "L3",
+      "is_gate": true,
+      "requirement": "涉及状态、资源或外部服务的跨层验证应覆盖权限、超时、错误传播、回滚和清理等关键失败路径，而不只验证成功路径。",
+      "applicability": {
+        "applies_when": [
+          "关键流程管理资源、持久状态、权限或外部服务"
+        ],
+        "not_applicable_when": [
+          "被验证路径没有资源生命周期、外部依赖或可识别失败分支"
+        ]
+      },
+      "evidence": {
+        "positive": [
+          "故障用例验证权限、超时、错误传播、回滚和资源清理中的适用部分"
+        ],
+        "partial": [
+          "只覆盖成功路径，或失败测试没有验证状态和资源结果"
+        ],
+        "conflict": [
+          "测试声称失败后安全恢复，但清理断言、状态检查或运行手册显示相反结果"
+        ],
+        "minimum_level": "verified"
+      },
+      "remediation": {
+        "summary": "根据真实风险补充最小失败场景，并断言错误传播、状态和资源清理结果。",
+        "artifact_types": [
+          "failure_path_test",
+          "resource_assertion"
+        ],
+        "risk": "medium"
+      },
+      "dependencies": [
+        "HD-VER-004"
+      ],
+      "conflicts_with": [],
+      "alternatives": [],
+      "source_refs": [
+        {
+          "source_id": "walkinglabs-he@77e7a3e",
+          "document_id": "walkinglabs-he-L10",
+          "locator": "",
+          "note": "跨层验证需要覆盖失败和资源路径。"
+        }
+      ],
+      "source_aliases": [
+        "L10-C05"
+      ],
+      "lifecycle": {
+        "status": "active",
+        "introduced_in": "0.1.0",
+        "changed_in": "0.4.0",
+        "deprecated_in": null,
+        "superseded_by": null
+      }
+    }
+  ],
+  "excluded_candidates": []
+}

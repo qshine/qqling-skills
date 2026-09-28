@@ -1,0 +1,382 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Harness Doctor EvidenceBundle 1.0.0",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "collector_version": {
+      "const": "0.1.0"
+    },
+    "policy_version": {
+      "const": "0.1.0"
+    },
+    "trust": {
+      "const": "untrusted_repository_data"
+    },
+    "repository": {
+      "type": "object",
+      "properties": {
+        "root": {
+          "const": "."
+        },
+        "root_id": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "git": {
+          "type": "object",
+          "properties": {
+            "marker_kind": {
+              "enum": [
+                "directory",
+                "file"
+              ]
+            },
+            "metadata_status": {
+              "enum": [
+                "available",
+                "unverifiable"
+              ]
+            },
+            "head_sha256": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "index_sha256": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "worktree_status": {
+              "const": "unverifiable"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "marker_kind",
+            "metadata_status",
+            "head_sha256",
+            "index_sha256",
+            "worktree_status",
+            "reason"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "root",
+        "root_id",
+        "git"
+      ],
+      "additionalProperties": false
+    },
+    "scan": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "const": "."
+        },
+        "complete_within_policy": {
+          "type": "boolean"
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "entries": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "files": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "depth": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "file_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "total_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "lines": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "line_chars": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "excerpt_chars": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "git_bytes": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "entries",
+            "files",
+            "depth",
+            "file_bytes",
+            "total_bytes",
+            "lines",
+            "line_chars",
+            "excerpt_chars",
+            "git_bytes"
+          ],
+          "additionalProperties": false
+        },
+        "entries_seen": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "files_reported": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bytes_read": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excerpt_chars": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excluded_counts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "required": [
+        "scope",
+        "complete_within_policy",
+        "limits",
+        "entries_seen",
+        "files_reported",
+        "bytes_read",
+        "excerpt_chars",
+        "excluded_counts"
+      ],
+      "additionalProperties": false
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/file"
+      },
+      "maxItems": 256
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "line": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "kind": {
+            "enum": [
+              "package_script",
+              "static_target"
+            ]
+          },
+          "executed": {
+            "const": false
+          }
+        },
+        "required": [
+          "file_id",
+          "name",
+          "line",
+          "kind",
+          "executed"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "path": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "impact": {
+            "enum": [
+              "policy_exclusion",
+              "content_unavailable",
+              "scan_incomplete",
+              "metadata_unverifiable"
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "path",
+          "impact",
+          "message"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "collector_version",
+    "policy_version",
+    "trust",
+    "repository",
+    "scan",
+    "files",
+    "commands",
+    "limitations"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "file": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^EV-[a-f0-9]{64}$"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "scope": {
+          "type": "string"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "agent_instruction",
+              "project_documentation",
+              "architecture_decision",
+              "task_state",
+              "package_manifest",
+              "toolchain",
+              "task_runner",
+              "verification",
+              "ci_configuration",
+              "automation",
+              "observability",
+              "maintenance"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "read_status": {
+          "enum": [
+            "read",
+            "metadata_only",
+            "withheld_sensitive",
+            "unreadable",
+            "excluded"
+          ]
+        },
+        "size_bytes": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "mtime_ns": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "line": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 400
+              }
+            },
+            "required": [
+              "line",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 120
+        },
+        "excerpt_truncated": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "path",
+        "scope",
+        "categories",
+        "read_status",
+        "size_bytes",
+        "mtime_ns",
+        "sha256",
+        "lines",
+        "excerpt_truncated"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

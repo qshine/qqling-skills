@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "registry_version": "0.1.0",
+  "source_snapshots": [
+    {
+      "id": "fixture-source@v1",
+      "title": "Fixture Source",
+      "publisher": "Harness Doctor tests",
+      "canonical_url": "https://example.invalid/fixture",
+      "revision": {
+        "kind": "git_commit",
+        "value": "1111111111111111111111111111111111111111"
+      },
+      "accessed_on": "2026-09-04",
+      "language": "zh",
+      "documents": [
+        {
+          "id": "fixture-L01",
+          "title": "Fixture document",
+          "page_url": "https://example.invalid/fixture/L01",
+          "source_path": "docs/fixture/L01.md"
+        }
+      ]
+    }
+  ]
+}

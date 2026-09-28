@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.0",
+  "registry_version": "0.2.0",
+  "source_snapshots": [
+    {
+      "id": "anthropic-long-running@2025-11-26",
+      "title": "Effective harnesses for long-running agents",
+      "publisher": "Anthropic",
+      "canonical_url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+      "revision": {
+        "kind": "published_at",
+        "value": "2025-11-26"
+      },
+      "accessed_on": "2026-09-09",
+      "language": "en",
+      "documents": [
+        {
+          "id": "anthropic-long-running-agents",
+          "title": "Effective harnesses for long-running agents",
+          "page_url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+          "source_path": "engineering/effective-harnesses-for-long-running-agents"
+        }
+      ]
+    },
+    {
+      "id": "walkinglabs-he@77e7a3e",
+      "title": "Harness Engineering 中文讲义",
+      "publisher": "Walking Labs",
+      "canonical_url": "https://github.com/walkinglabs/learn-harness-engineering",
+      "revision": {
+        "kind": "git_commit",
+        "value": "77e7a3e21469dcbece2558086c8d91657abeaa40"
+      },
+      "accessed_on": "2026-09-04",
+      "language": "zh",
+      "documents": [
+        {
+          "id": "walkinglabs-he-L01",
+          "title": "L01 模型能力强，不等于执行可靠",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-01-why-capable-agents-still-fail/",
+          "source_path": "docs/zh/lectures/lecture-01-why-capable-agents-still-fail/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L02",
+          "title": "L02 Harness 到底是什么",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-02-what-a-harness-actually-is/",
+          "source_path": "docs/zh/lectures/lecture-02-what-a-harness-actually-is/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L03",
+          "title": "L03 让代码仓库成为唯一的事实来源",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-03-why-the-repository-must-become-the-system-of-record/",
+          "source_path": "docs/zh/lectures/lecture-03-why-the-repository-must-become-the-system-of-record/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L04",
+          "title": "L04 把指令拆分到不同文件里",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-04-why-one-giant-instruction-file-fails/",
+          "source_path": "docs/zh/lectures/lecture-04-why-one-giant-instruction-file-fails/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L05",
+          "title": "L05 让跨会话的任务保持上下文连续",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-05-why-long-running-tasks-lose-continuity/",
+          "source_path": "docs/zh/lectures/lecture-05-why-long-running-tasks-lose-continuity/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L06",
+          "title": "L06 让 Agent 每次工作前先初始化",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-06-why-initialization-needs-its-own-phase/",
+          "source_path": "docs/zh/lectures/lecture-06-why-initialization-needs-its-own-phase/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L07",
+          "title": "L07 给 Agent 划清每次任务的边界",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-07-why-agents-overreach-and-under-finish/",
+          "source_path": "docs/zh/lectures/lecture-07-why-agents-overreach-and-under-finish/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L08",
+          "title": "L08 用功能清单约束 Agent 该做什么",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-08-why-feature-lists-are-harness-primitives/",
+          "source_path": "docs/zh/lectures/lecture-08-why-feature-lists-are-harness-primitives/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L09",
+          "title": "L09 防止 Agent 提前宣告完成",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-09-why-agents-declare-victory-too-early/",
+          "source_path": "docs/zh/lectures/lecture-09-why-agents-declare-victory-too-early/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L10",
+          "title": "L10 跑通完整流程才算真正验证",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-10-why-end-to-end-testing-changes-results/",
+          "source_path": "docs/zh/lectures/lecture-10-why-end-to-end-testing-changes-results/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L11",
+          "title": "L11 让 Agent 的运行过程可观测",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-11-why-observability-belongs-inside-the-harness/",
+          "source_path": "docs/zh/lectures/lecture-11-why-observability-belongs-inside-the-harness/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L12",
+          "title": "L12 每次会话结束前都做好交接",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-12-why-every-session-must-leave-a-clean-state/",
+          "source_path": "docs/zh/lectures/lecture-12-why-every-session-must-leave-a-clean-state/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L13",
+          "title": "L13 从手动驱动到自动循环",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-13-loop-engineering/",
+          "source_path": "docs/zh/lectures/lecture-13-loop-engineering/index.md"
+        },
+        {
+          "id": "walkinglabs-he-L14",
+          "title": "L14 从单循环到图工程",
+          "page_url": "https://walkinglabs.github.io/learn-harness-engineering/zh/lectures/lecture-14-graph-engineering/",
+          "source_path": "docs/zh/lectures/lecture-14-graph-engineering/index.md"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "ql-skill-usage-auditor"
+  short_description: "Audit actual Skill loads and review low-use installs"
+  default_prompt: "Use $ql-skill-usage-auditor to rank my actual Skill loads, show trends, and prepare a safe cleanup review."
